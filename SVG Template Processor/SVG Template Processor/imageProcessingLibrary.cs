@@ -16,79 +16,15 @@ namespace SVG_Template_Processor
         {
             
             Bitmap myBitmap = new Bitmap(file);
-
-            for (int y = 0; y < myBitmap.Height; ++y)
-            {
-                for (int x = 0; x < myBitmap.Width; ++x)
-                {
-                    if (myBitmap.GetPixel(x, y).A != 255)
-                    {
-                        
-                    }
-                }
-            }
-            
-
-
-
-
-            Color c = Color.BlanchedAlmond;
-
-            return null;
-            
-        }
-        
-        public static Bitmap Transparent2Color(Bitmap bmp1, Color target)
-        {
-            Bitmap bmp2 = new Bitmap(bmp1.Width, bmp1.Height);
-            Rectangle rect = new Rectangle(Point.Empty, bmp1.Size);
-            using (Graphics G = Graphics.FromImage(bmp2))
-            {
-                G.Clear(target);
-                
-                G.DrawImageUnscaledAndClipped(bmp1, rect);
-            }
-            return bmp2;
-        }
-
-         static void Main()
-        {
-            
-                try
-                {
-                   // Bitmap bNew = fileChange(@"\\chptfs\Shared\Intern Projects\SVG Template Creation\pngTemplatesApetureAreas\LoveChalkboard_test.png");
-                  // bNew.Save("c:\\Users\\rschultz\\Desktop\\bNew.png", ImageFormat.Png);
-
-                }
-            catch(Exception e)
-                {
-
-            }
-            finally{
-                    
-                }
-
-        }
-
-
-
-
-
-
-
-
-        private Rectangle[] GetHoles(FileInfo File, out Size ImageSize)
-        {
-            Bitmap I = (Bitmap)Bitmap.FromFile(File.FullName, false);
-            ImageSize = I.Size;
-            BitmapData bmData = I.LockBits(new Rectangle(0, 0, I.Width, I.Height), ImageLockMode.ReadOnly, I.PixelFormat);
+            Size ImageSize = myBitmap.Size;
+            BitmapData bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
 
             int pixelSize = 4;
             int startX = 0;
             int startY = 0;
-            int stopX = startX + I.Width;
-            int stopY = startY + I.Height;
-            int offset = bmData.Stride - I.Width * pixelSize;
+            int stopX = startX + myBitmap.Width;
+            int stopY = startY + myBitmap.Height;
+            int offset = bmData.Stride - myBitmap.Width * pixelSize;
             List<Point> Points = new List<Point>();
             List<Rectangle> ret = new List<Rectangle>();
             unsafe
@@ -120,9 +56,9 @@ namespace SVG_Template_Processor
                     ptr += offset;
                 }
             }
-            I.UnlockBits(bmData);
-            I.Dispose();
-            I = null;
+            myBitmap.UnlockBits(bmData);
+            myBitmap.Dispose();
+            myBitmap = null;
             while (Points.Count > 0)
             {
                 Point Base = Points[0];
@@ -138,7 +74,38 @@ namespace SVG_Template_Processor
             }
 
             return ret.ToArray();
+            
+        }
+        
+        public static Bitmap Transparent2Color(Bitmap bmp1, Color target)
+        {
+            Bitmap bmp2 = new Bitmap(bmp1.Width, bmp1.Height);
+            Rectangle rect = new Rectangle(Point.Empty, bmp1.Size);
+            using (Graphics G = Graphics.FromImage(bmp2))
+            {
+                G.Clear(target);
+                
+                G.DrawImageUnscaledAndClipped(bmp1, rect);
+            }
+            return bmp2;
+        }
+
+         static void Main()
+        {
+            
+                try
+                {   Rectangle[] rNew = new Rectangle[10];
+                rNew = fileChange(@"\\chptfs\Shared\Intern Projects\SVG Template Creation\pngTemplatesApetureAreas\1141_2226x1047_11ozMug_4up_Misc_LoveNeverFailsLabel.png");
+                }
+            catch(Exception e)
+                {
+
+            }
+            finally{
+                    
+                }
 
         }
+
     }
 }
