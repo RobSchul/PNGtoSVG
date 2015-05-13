@@ -1,0 +1,3 @@
+C:\Users\rschultz\Source\Repos\SNSA\SVG Template Processor\SVG Template Processor\bin\Debug\SVG Template Processor.exe.config
+C:\Users\rschultz\Source\Repos\SNSA\SVG Template Processor\SVG Template Processor\obj\Debug\SVG Template Processor.csprojResolveAssemblyReference.cache
+C:\Users\rschultz\Source\Repos\PNGtoSVG\SVG Template Processor\SVG Template Processor\bin\Debug\SVG Template Processor.exe.config
