@@ -12,16 +12,24 @@ namespace SVG_Template_Processor
 {
     class imageProcessingLibrary
     {
-        imageProcessingLibrary(String filePath)
+        public static Bitmap fileChange(String file)
         {
-           
-            Image png = Image.FromFile(filePath);
+            Image image = Image.FromFile(file);
+            Bitmap myBitmap = new Bitmap(file);
+            myBitmap.Save("newBmp.bmp", ImageFormat.Bmp);
 
-            Image o = Image.FromFile(filePath);
+            image.Save("newBMP.bmp", ImageFormat.Bmp);
+
+            
+            
+            Color c = Color.BlanchedAlmond;
+
+
+            return Transparent2Color(myBitmap, c);
             
         }
         
-        Bitmap Transparent2Color(Bitmap bmp1, Color target)
+        public static Bitmap Transparent2Color(Bitmap bmp1, Color target)
         {
             Bitmap bmp2 = new Bitmap(bmp1.Width, bmp1.Height);
             Rectangle rect = new Rectangle(Point.Empty, bmp1.Size);
@@ -31,6 +39,25 @@ namespace SVG_Template_Processor
                 G.DrawImageUnscaledAndClipped(bmp1, rect);
             }
             return bmp2;
+        }
+
+         static void Main()
+        {
+            
+                try
+                {
+                    Bitmap bNew = fileChange(@"\\chptfs\Shared\Intern Projects\SVG Template Creation\pngTemplatesApetureAreas\BlueBirchTrees_print.png");
+                   bNew.Save("c:\\Users\\rschultz\\Desktop\\bNew.png", ImageFormat.Png);
+
+                }
+            catch(Exception e)
+                {
+
+            }
+            finally{
+                    
+                }
+
         }
 
 
