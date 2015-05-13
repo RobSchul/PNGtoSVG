@@ -12,20 +12,29 @@ namespace SVG_Template_Processor
 {
     class imageProcessingLibrary
     {
-        public static Bitmap fileChange(String file)
+        public static Rectangle[] fileChange(String file)
         {
-            Image image = Image.FromFile(file);
+            
             Bitmap myBitmap = new Bitmap(file);
-            myBitmap.Save("newBmp.bmp", ImageFormat.Bmp);
 
-            image.Save("newBMP.bmp", ImageFormat.Bmp);
+            for (int y = 0; y < myBitmap.Height; ++y)
+            {
+                for (int x = 0; x < myBitmap.Width; ++x)
+                {
+                    if (myBitmap.GetPixel(x, y).A != 255)
+                    {
+                        
+                    }
+                }
+            }
+            
 
-            
-            
+
+
+
             Color c = Color.BlanchedAlmond;
 
-
-            return Transparent2Color(myBitmap, c);
+            return null;
             
         }
         
@@ -36,6 +45,7 @@ namespace SVG_Template_Processor
             using (Graphics G = Graphics.FromImage(bmp2))
             {
                 G.Clear(target);
+                
                 G.DrawImageUnscaledAndClipped(bmp1, rect);
             }
             return bmp2;
@@ -46,8 +56,8 @@ namespace SVG_Template_Processor
             
                 try
                 {
-                    Bitmap bNew = fileChange(@"\\chptfs\Shared\Intern Projects\SVG Template Creation\pngTemplatesApetureAreas\BlueBirchTrees_print.png");
-                   bNew.Save("c:\\Users\\rschultz\\Desktop\\bNew.png", ImageFormat.Png);
+                   // Bitmap bNew = fileChange(@"\\chptfs\Shared\Intern Projects\SVG Template Creation\pngTemplatesApetureAreas\LoveChalkboard_test.png");
+                  // bNew.Save("c:\\Users\\rschultz\\Desktop\\bNew.png", ImageFormat.Png);
 
                 }
             catch(Exception e)
