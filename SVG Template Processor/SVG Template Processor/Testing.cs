@@ -18,7 +18,7 @@ namespace SVG_Template_Processor
             
                 try
                 {   Rectangle[] rNew = new Rectangle[10];
-                Bitmap bNew = i.Transparent2Color(@"\\chptfs\Shared\Intern Projects\SVG Template Creation\pngTemplatesApetureAreas\Calendar_PatrioticBlueStars.png");
+                Bitmap bNew = i.Transparent2Color(@"\\chptfs\Shared\Intern Projects\SVG Template Creation\pngTemplatesApetureAreas\Calendar_TurquoisBaroque.png");
                // rNew = fileChange(@"\\chptfs\Shared\Intern Projects\SVG Template Creation\pngTemplatesApetureAreas\1141_2226x1047_11ozMug_4up_Misc_LoveNeverFailsLabel.png");
                 bNew.Save("c:\\Users\\rschultz\\Desktop\\bNew.png", ImageFormat.Png);
                 }
