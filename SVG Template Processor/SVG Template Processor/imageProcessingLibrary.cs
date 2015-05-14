@@ -31,16 +31,17 @@ namespace SVG_Template_Processor
                 Point Base = Points[0];
                 Rectangle BaseR = new Rectangle(Base, new Size(1, 1));
                 List<Point> RecPoints = (from P in Points where P.X == Base.X || P.Y == Base.Y select P).ToList();
-                foreach (Point P in RecPoints)
+                foreach (Point point in RecPoints)
                 {
-                    if (P.X == Base.X && P.Y == (BaseR.Y + BaseR.Height) + 1)
+                    if (point.X == Base.X && point.Y == (BaseR.Y + BaseR.Height) + 1)
                         BaseR.Height++;
-                    if (P.Y == Base.Y && P.X == (BaseR.X + BaseR.Width) + 1)
+                    if (point.Y == Base.Y && point.X == (BaseR.X + BaseR.Width) + 1 )
                         BaseR.Width++;
                 }
                 Points.RemoveAll(P => BaseR.Contains(P));
                 if (BaseR.Width > 1 && BaseR.Height > 1)
                     ret.Add(BaseR);
+                
             }
             return ret.ToArray();
         }
@@ -57,7 +58,7 @@ namespace SVG_Template_Processor
             byte* point = (byte*)bmData.Scan0;
             //point to the first pixel 
             point += (startY * bmData.Stride + startX);
-
+            
             for (int y = startY; y < stopY; y++)
             {
                 for (int x = startX; x < stopX; x++)
