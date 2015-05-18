@@ -95,7 +95,7 @@ namespace SVG_Template_Processor
             this.Controls.Add(this.ftbConvert);
             this.Font = new System.Drawing.Font("Modern No. 20", 8.249999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HelpButton = true;
-            this.Name = "Form2";
+            this.Name = "SVGCreation";
             this.Text = "SVGCreation";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
