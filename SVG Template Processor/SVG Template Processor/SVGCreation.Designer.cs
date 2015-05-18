@@ -79,7 +79,7 @@ namespace SVG_Template_Processor
             this.outputDest.Cursor = System.Windows.Forms.Cursors.Hand;
             this.outputDest.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.outputDest.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.outputDest.Location = new System.Drawing.Point(78, 196);
+            this.outputDest.Location = new System.Drawing.Point(78, 153);
             this.outputDest.Name = "outputDest";
             this.outputDest.Size = new System.Drawing.Size(135, 41);
             this.outputDest.TabIndex = 3;
@@ -91,11 +91,11 @@ namespace SVG_Template_Processor
             // 
             this.outputDestinationBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.outputDestinationBox.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.outputDestinationBox.Location = new System.Drawing.Point(261, 207);
+            this.outputDestinationBox.Location = new System.Drawing.Point(261, 164);
             this.outputDestinationBox.MaximumSize = new System.Drawing.Size(530, 25);
             this.outputDestinationBox.MinimumSize = new System.Drawing.Size(530, 25);
             this.outputDestinationBox.Name = "outputDestinationBox";
-            this.outputDestinationBox.Size = new System.Drawing.Size(530, 22);
+            this.outputDestinationBox.Size = new System.Drawing.Size(530, 25);
             this.outputDestinationBox.TabIndex = 4;
             this.outputDestinationBox.TabStop = false;
             // 
@@ -104,7 +104,7 @@ namespace SVG_Template_Processor
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(854, 480);
+            this.ClientSize = new System.Drawing.Size(879, 500);
             this.Controls.Add(this.outputDestinationBox);
             this.Controls.Add(this.outputDest);
             this.Controls.Add(this.listBoxSourceFiles);
