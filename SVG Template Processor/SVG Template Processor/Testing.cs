@@ -10,28 +10,17 @@ using System.IO;
 
 namespace SVG_Template_Processor
 {
-    class Testing
-    {
-         static void Main()
+    partial class Form1
+    {   /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
         {
-            imageProcessingLibrary i = new imageProcessingLibrary();
-            
-                try
-                {   Rectangle[] rNew = new Rectangle[10];
-                Bitmap bNew = i.Transparent2Color(@"\\chptfs\Shared\Intern Projects\SVG Template Creation\pngTemplatesApetureAreas\8upGrid5x5Plaque_print.png");
-               // rNew = fileChange(@"\\chptfs\Shared\Intern Projects\SVG Template Creation\pngTemplatesApetureAreas\1141_2226x1047_11ozMug_4up_Misc_LoveNeverFailsLabel.png");
-                bNew.Save("c:\\Users\\rschultz\\Desktop\\bNew.png", ImageFormat.Png);
-                }
-            catch(Exception e)
-                {
-                    Console.WriteLine(e);
-                    Console.ReadKey();
-            }
-            finally{
-                    
-                }
-
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new SVGCreation());
         }
-
+        
     }
 }
