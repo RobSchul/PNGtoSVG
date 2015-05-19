@@ -12,17 +12,29 @@ using System.Windows.Forms;
 namespace SVG_Template_Processor
 {
     class imageProcessingLibrary
-    {
-        public Rectangle[] fileChange(String file)
+    {private string filePath;
+        
+        public  imageProcessingLibrary(string file)
+            {
+                filePath = file;
+           
+            }
+        /// <summary>
+        ///  get all regions that are transparent and sent back an array of rectangles  
+        ///  
+        /// </summary>
+        public Rectangle[] getTRegions()
         {
-
-            Bitmap myBitmap = new Bitmap(file);
+            Bitmap myBitmap = new Bitmap(filePath);
             BitmapData bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
             List<Point> Points = findTPoints(myBitmap, bmData);
              return mapTpoints(Points);
 
         }
-
+        /// <summary>
+        ///  map out the points for the rectangle holes 
+        ///  put those into an array for easy labeling of where they are
+        /// </summary>
         private Rectangle[] mapTpoints(List<Point> points)
         {   List<Rectangle> ret = new List<Rectangle>();
             while (points.Count > 0)
@@ -37,14 +49,16 @@ namespace SVG_Template_Processor
                     if (point.Y == pBase.Y && point.X == (baseR.X + baseR.Width) + 1)
                         baseR.Width++;
                 }
-                points.RemoveAll(P => baseR.Contains(P));
+                points.RemoveAll(P => baseR.Contains(P));// problem in this area
                 if (baseR.Width > 1 && baseR.Height > 1)
                     ret.Add(baseR);
                 
             }
             return ret.ToArray();
         }
-
+        /// <summary>
+        ///  find the transparent points
+        /// </summary>
         private unsafe List<Point> findTPoints(Bitmap myBitmap, BitmapData bmData)
         {
             int pixelSize = 4, startX = 0, startY = 0;
@@ -57,7 +71,7 @@ namespace SVG_Template_Processor
             byte* point = (byte*)bmData.Scan0;
             //point to the first pixel 
             point += (startY * bmData.Stride + startX);
-            
+            //search through the picture finding all transparent points and adding them to a points list
             for (int y = startY; y < stopY; y++)
             {   for (int x = startX; x < stopX; x++)
                     for (int p = 0; p < pixelSize; p++, point++)
@@ -79,13 +93,14 @@ namespace SVG_Template_Processor
         }
 
 
-        public Bitmap Transparent2Color(String file)
+        public Bitmap Transparent2Color(string file)
         {
             Image image = Image.FromFile(file);
             Bitmap myBitmap = new Bitmap(file);
             Color white = Color.White;
             Bitmap bmp2 = new Bitmap(myBitmap.Width, myBitmap.Height);
-            Rectangle[] rect = fileChange(file);
+            filePath = file;
+            Rectangle[] rect = getTRegions();
 
             
             SolidBrush blueBrush = new SolidBrush(Color.Yellow);
