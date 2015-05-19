@@ -1,6 +1,4 @@
-﻿    
-
-
+﻿
 namespace SVG_Template_Processor
 {
     partial class SVGCreation
@@ -32,9 +30,11 @@ namespace SVG_Template_Processor
             this.ofdButton = new DevExpress.XtraEditors.SimpleButton();
             this.svgConvertB = new DevExpress.XtraEditors.SimpleButton();
             this.sourceFiles = new DevExpress.XtraEditors.ListBoxControl();
+            this.ftbEmbedded = new System.Windows.Forms.OpenFileDialog();
             this.outputfilepath = new DevExpress.XtraEditors.TextEdit();
             this.imagePlaced = new DevExpress.XtraEditors.DropDownButton();
             this.overlayImage = new DevExpress.XtraEditors.TextEdit();
+            this.removSeleButton = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputfilepath.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.overlayImage.Properties)).BeginInit();
@@ -86,8 +86,17 @@ namespace SVG_Template_Processor
             this.sourceFiles.Appearance.Options.UseFont = true;
             this.sourceFiles.Location = new System.Drawing.Point(445, 112);
             this.sourceFiles.Name = "sourceFiles";
+            this.sourceFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.sourceFiles.Size = new System.Drawing.Size(530, 145);
             this.sourceFiles.TabIndex = 2;
+            this.sourceFiles.ToolTip = "PNG files that will be converted into SVG files";
+            // 
+            // ftbEmbedded
+            // 
+            this.ftbEmbedded.InitialDirectory = "i:\\CommissisionReconciliation\\Review\\";
+            this.ftbEmbedded.Multiselect = true;
+            this.ftbEmbedded.RestoreDirectory = true;
+            this.ftbEmbedded.FileOk += new System.ComponentModel.CancelEventHandler(this.ftbcDialogBox_FileOk);
             // 
             // outputfilepath
             // 
@@ -95,6 +104,7 @@ namespace SVG_Template_Processor
             this.outputfilepath.Name = "outputfilepath";
             this.outputfilepath.Size = new System.Drawing.Size(530, 20);
             this.outputfilepath.TabIndex = 10;
+            this.outputfilepath.ToolTip = "Destination of where the converted SVG files will go";
             // 
             // imagePlaced
             // 
@@ -114,6 +124,16 @@ namespace SVG_Template_Processor
             this.overlayImage.Name = "overlayImage";
             this.overlayImage.Size = new System.Drawing.Size(530, 20);
             this.overlayImage.TabIndex = 12;
+            this.overlayImage.ToolTip = "File Path to the file that will be embedded into the SVG";
+            // 
+            // removSeleButton
+            // 
+            this.removSeleButton.Location = new System.Drawing.Point(981, 163);
+            this.removSeleButton.Name = "removSeleButton";
+            this.removSeleButton.Size = new System.Drawing.Size(120, 26);
+            this.removSeleButton.TabIndex = 13;
+            this.removSeleButton.Text = "Remove Selected";
+            this.removSeleButton.Click += new System.EventHandler(this.removSeleButton_Click);
             // 
             // SVGCreation
             // 
@@ -121,6 +141,7 @@ namespace SVG_Template_Processor
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1320, 729);
+            this.Controls.Add(this.removSeleButton);
             this.Controls.Add(this.overlayImage);
             this.Controls.Add(this.imagePlaced);
             this.Controls.Add(this.outputfilepath);
@@ -146,7 +167,7 @@ namespace SVG_Template_Processor
         #endregion
 
 
-
+        private DevExpress.Utils.Menu.DXPopupMenu menu;
         private System.Windows.Forms.OpenFileDialog ftbcDialogBox;
         private System.Windows.Forms.FolderBrowserDialog outDialogBox;
         private DevExpress.XtraEditors.SimpleButton ftbConvertButton;
@@ -156,6 +177,10 @@ namespace SVG_Template_Processor
         private DevExpress.XtraEditors.TextEdit outputfilepath;
         private DevExpress.XtraEditors.DropDownButton imagePlaced;
         private DevExpress.XtraEditors.TextEdit overlayImage;
+        private System.Windows.Forms.OpenFileDialog ftbEmbedded;
+        private DevExpress.XtraEditors.SimpleButton removSeleButton;
+        
+                    
 
     
      }

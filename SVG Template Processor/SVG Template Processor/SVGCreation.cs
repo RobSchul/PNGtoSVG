@@ -1,16 +1,13 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Windows.Forms;
-using DevExpress.XtraEditors;
-using DevExpress.Utils.Menu;
-using System.Drawing;
+
+
 
 
 namespace SVG_Template_Processor
 {
-    public partial class SVGCreation : Form
+    public partial class SVGCreation : System.Windows.Forms.Form
     {
-
+        //iitalize 
         public SVGCreation()
         {
             InitializeComponent();
@@ -20,7 +17,7 @@ namespace SVG_Template_Processor
         private void ofdButton_Click(object sender, EventArgs e)
         {
 
-            if (outDialogBox.ShowDialog() == DialogResult.OK)
+            if (outDialogBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 try
                 {   
@@ -30,14 +27,16 @@ namespace SVG_Template_Processor
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                    System.Windows.Forms.MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
         }
+        //automated
         private void Form2_Load(object sender)
         {
 
         }
+        //automated
         private void Form2_Load(object sender, EventArgs e)
         {
 
@@ -46,7 +45,7 @@ namespace SVG_Template_Processor
        
         private void ftbConvert_Click(object sender, EventArgs e)
         {
-            if (ftbcDialogBox.ShowDialog() == DialogResult.OK)
+            if (ftbcDialogBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 try
                 {
@@ -58,70 +57,84 @@ namespace SVG_Template_Processor
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                    System.Windows.Forms.MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
         }
-
-        private void ftbcDialogBox_FileOk(object sender, CancelEventArgs e)
+        //automated
+        private void ftbcDialogBox_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
         }
 
-        
-        private void opdDialogBox_FileOk(object sender, CancelEventArgs e)
+        //automated
+        private void opdDialogBox_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
         }
-
-        private void ftbEmbedded_FileOk(object sender, CancelEventArgs e) { }
+        //automated
+        private void ftbEmbedded_FileOk(object sender, System.ComponentModel.CancelEventArgs e) { }
 
         private void imagePlaced_Click(object sender, System.EventArgs e)
-            {
+            {   //if the text says embedded image open file dialog for the user to select the image that will be inserted into the templete
                 if(imagePlaced.Text.Equals("Embedded Image"))
-                {  System.Windows.Forms.OpenFileDialog ftbEmbedded = new System.Windows.Forms.OpenFileDialog();
-                    ftbcDialogBox.Filter = "Images (*.PNG)|*.PNG|All files (*.*)|*.*";
-                    ftbEmbedded.InitialDirectory = "i:\\CommissisionReconciliation\\Review\\";
-                    ftbEmbedded.Multiselect = true;
-                    ftbEmbedded.RestoreDirectory = true;
-                    ftbEmbedded.Title = "Please Select PNG File(s) for Conversion";
-                    ftbEmbedded.FileOk += new System.ComponentModel.CancelEventHandler(this.ftbcDialogBox_FileOk);
-                if (ftbEmbedded.ShowDialog() == DialogResult.OK)
                 {
-                    try
-                    {
-                        overlayImage.Text = System.IO.Path.GetFullPath(ftbEmbedded.FileName);
+                    if (ftbEmbedded.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            try
+                            {   //change the text in the text box to the file path of the file to be embedded
+                                overlayImage.Text = System.IO.Path.GetFullPath(ftbEmbedded.FileName);
+                                overlayImage.ToolTip = "File Path to the file that will be embedded into the SVG"; // change the tool tip if it has been changed so user knows whats going on
+
                         
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
-                    }
-                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Windows.Forms.MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message); // error message
+                            }
+                        }
                 }
                 else
                 {
-
+                    overlayImage.ToolTip = "URL based link that will be embedded into the SVG"; // change the tool top if it has been changed so the user knows whats going on
                 }
             }
-    
+        //create the dropdown box for embedded image/ linked url
         private void CreateDropDownControl()
         {
          
         imagePlaced.DropDownControl = CreateDXPopupMenu();
+        
         }
-        private DXPopupMenu CreateDXPopupMenu()
-        {
-            DXPopupMenu menu = new DXPopupMenu();
-            menu.Items.Add(new DXMenuItem("Embedded Image", OnItemClick));
-            menu.Items.Add(new DXMenuItem("Linked Image", OnItemClick));
+        private DevExpress.Utils.Menu.DXPopupMenu CreateDXPopupMenu()
+        {  //creation of the drop down menu for drop down box
+            try
+            {
+                menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Embedded Image", OnItemClick));
+                menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Linked Image", OnItemClick));
+            }
+            catch(Exception e)
+            {
+
+            }
             return menu;
         }
-
         private void OnItemClick(object sender, EventArgs e)
+        {   //finding out what was selected on the action event of clicking something in the drop down menu
+            DevExpress.Utils.Menu.DXMenuItem item = sender as DevExpress.Utils.Menu.DXMenuItem;
+            imagePlaced.Text = item.Caption; // change the text of the button for the user
+            if(!item.Equals("Embedded Image"))
+            {   //if it is linked image change the tool tip for the user
+                overlayImage.ToolTip = "URL based link that will be embedded into the SVG";
+            }
+        }
+
+        private void removSeleButton_Click(object sender, EventArgs e)
         {
-            DXMenuItem item = sender as DXMenuItem;
-            imagePlaced.Text = item.Caption;
+            for (int i = sourceFiles.SelectedIndices.Count-1; i >= 0; i--)
+                {
+                 sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
+                }
         }
 
     }
