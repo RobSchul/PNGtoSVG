@@ -108,15 +108,10 @@ namespace SVG_Template_Processor
         }
         private DevExpress.Utils.Menu.DXPopupMenu CreateDXPopupMenu()
         {  //creation of the drop down menu for drop down box
-            try
-            {
+            DevExpress.Utils.Menu.DXPopupMenu menu = new DevExpress.Utils.Menu.DXPopupMenu();
                 menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Embedded Image", OnItemClick));
                 menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Linked Image", OnItemClick));
-            }
-            catch(Exception e)
-            {
-
-            }
+            
             return menu;
         }
         private void OnItemClick(object sender, EventArgs e)

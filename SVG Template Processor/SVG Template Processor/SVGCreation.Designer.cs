@@ -24,6 +24,7 @@ namespace SVG_Template_Processor
         #region Windows Form Designer generated code
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SVGCreation));
             this.ftbcDialogBox = new System.Windows.Forms.OpenFileDialog();
             this.outDialogBox = new System.Windows.Forms.FolderBrowserDialog();
             this.ftbConvertButton = new DevExpress.XtraEditors.SimpleButton();
@@ -63,7 +64,7 @@ namespace SVG_Template_Processor
             // ofdButton
             // 
             this.ofdButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ofdButton.Location = new System.Drawing.Point(275, 307);
+            this.ofdButton.Location = new System.Drawing.Point(275, 372);
             this.ofdButton.Name = "ofdButton";
             this.ofdButton.Size = new System.Drawing.Size(120, 26);
             this.ofdButton.TabIndex = 8;
@@ -74,7 +75,7 @@ namespace SVG_Template_Processor
             // svgConvertB
             // 
             this.svgConvertB.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.svgConvertB.Location = new System.Drawing.Point(633, 560);
+            this.svgConvertB.Location = new System.Drawing.Point(584, 563);
             this.svgConvertB.Name = "svgConvertB";
             this.svgConvertB.Size = new System.Drawing.Size(120, 26);
             this.svgConvertB.TabIndex = 9;
@@ -87,7 +88,7 @@ namespace SVG_Template_Processor
             this.sourceFiles.Location = new System.Drawing.Point(445, 112);
             this.sourceFiles.Name = "sourceFiles";
             this.sourceFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.sourceFiles.Size = new System.Drawing.Size(530, 145);
+            this.sourceFiles.Size = new System.Drawing.Size(530, 199);
             this.sourceFiles.TabIndex = 2;
             this.sourceFiles.ToolTip = "PNG files that will be converted into SVG files";
             // 
@@ -100,7 +101,7 @@ namespace SVG_Template_Processor
             // 
             // outputfilepath
             // 
-            this.outputfilepath.Location = new System.Drawing.Point(445, 313);
+            this.outputfilepath.Location = new System.Drawing.Point(445, 378);
             this.outputfilepath.Name = "outputfilepath";
             this.outputfilepath.Size = new System.Drawing.Size(530, 20);
             this.outputfilepath.TabIndex = 10;
@@ -110,7 +111,7 @@ namespace SVG_Template_Processor
             // 
             this.imagePlaced.Cursor = System.Windows.Forms.Cursors.Hand;
             this.imagePlaced.DropDownArrowStyle = DevExpress.XtraEditors.DropDownArrowStyle.SplitButton;
-            this.imagePlaced.Location = new System.Drawing.Point(275, 386);
+            this.imagePlaced.Location = new System.Drawing.Point(275, 451);
             this.imagePlaced.Name = "imagePlaced";
             this.imagePlaced.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.imagePlaced.Size = new System.Drawing.Size(135, 26);
@@ -120,7 +121,7 @@ namespace SVG_Template_Processor
             // 
             // overlayImage
             // 
-            this.overlayImage.Location = new System.Drawing.Point(445, 392);
+            this.overlayImage.Location = new System.Drawing.Point(445, 457);
             this.overlayImage.Name = "overlayImage";
             this.overlayImage.Size = new System.Drawing.Size(530, 20);
             this.overlayImage.TabIndex = 12;
@@ -151,6 +152,7 @@ namespace SVG_Template_Processor
             this.Controls.Add(this.ftbConvertButton);
             this.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SVGCreation";
             this.Text = "SVGCreation";
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
@@ -167,7 +169,7 @@ namespace SVG_Template_Processor
         #endregion
 
 
-        private DevExpress.Utils.Menu.DXPopupMenu menu;
+        
         private System.Windows.Forms.OpenFileDialog ftbcDialogBox;
         private System.Windows.Forms.FolderBrowserDialog outDialogBox;
         private DevExpress.XtraEditors.SimpleButton ftbConvertButton;
