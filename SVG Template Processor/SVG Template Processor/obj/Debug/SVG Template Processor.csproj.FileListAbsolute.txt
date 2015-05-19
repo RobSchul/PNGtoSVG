@@ -7,3 +7,4 @@ C:\Users\rschultz\Source\Repos\PNGtoSVG\SVG Template Processor\SVG Template Proc
 C:\Users\rschultz\Source\Repos\PNGtoSVG\SVG Template Processor\SVG Template Processor\obj\Debug\SVG Template Processor.pdb
 C:\Users\rschultz\Source\Repos\PNGtoSVG\SVG Template Processor\SVG Template Processor\obj\Debug\SVG Template Processor.csprojResolveAssemblyReference.cache
 C:\Users\rschultz\Source\Repos\PNGtoSVG\SVG Template Processor\SVG Template Processor\obj\Debug\SVG_Template_Processor.SVGCreation.resources
+C:\Users\rschultz\Source\Repos\PNGtoSVG\SVG Template Processor\SVG Template Processor\obj\Debug\SVG Template Processor.exe.licenses
