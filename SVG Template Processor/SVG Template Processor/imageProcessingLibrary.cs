@@ -85,6 +85,7 @@ namespace SVG_Template_Processor
                 }
                 point += offset;
             }
+            
             myBitmap.UnlockBits(bmData);
             myBitmap.Dispose();
             myBitmap = null;
