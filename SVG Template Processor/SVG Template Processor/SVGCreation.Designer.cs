@@ -80,6 +80,7 @@ namespace SVG_Template_Processor
             this.svgConvertB.Size = new System.Drawing.Size(120, 26);
             this.svgConvertB.TabIndex = 9;
             this.svgConvertB.Text = "Convert to SVG";
+            this.svgConvertB.Click += new System.EventHandler(this.svgConvertB_Click);
             // 
             // sourceFiles
             // 

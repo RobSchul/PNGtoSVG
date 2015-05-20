@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 
 
@@ -7,6 +9,8 @@ namespace SVG_Template_Processor
 {
     public partial class SVGCreation : System.Windows.Forms.Form
     {
+        private List<string> pngFiles = new List<string>();
+    
         //iitalize 
         public SVGCreation()
         {
@@ -50,9 +54,13 @@ namespace SVG_Template_Processor
                 try
                 {
                     string tempFolder = System.IO.Path.GetTempPath();
+                    
                     foreach (string FileName in this.ftbcDialogBox.FileNames)
                     {
                         sourceFiles.Items.Add(System.IO.Path.GetFileName(FileName));
+                        pngFiles.Add(ftbcDialogBox.FileName);
+                        
+
                     }
                 }
                 catch (Exception ex)
@@ -130,6 +138,13 @@ namespace SVG_Template_Processor
                 {
                  sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
                 }
+        }
+
+        private void svgConvertB_Click(object sender, EventArgs e)
+        {
+            SVGCreationLibrary create = new SVGCreationLibrary(pngFiles.ToArray());
+            create.buildSVG();
+         
         }
 
     }
