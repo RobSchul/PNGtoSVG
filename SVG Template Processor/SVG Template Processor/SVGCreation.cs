@@ -1,6 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
+
 
 
 
@@ -9,16 +12,16 @@ namespace SVG_Template_Processor
 {
     public partial class SVGCreation : System.Windows.Forms.Form
     {
-        private List<string> pngFiles = new List<string>();
+        private System.Collections.Generic.List<string> pngFiles = new System.Collections.Generic.List<string>();
     
         //iitalize 
         public SVGCreation()
         {
             InitializeComponent();
             CreateDropDownControl();
+            
         }
-
-        private void ofdButton_Click(object sender, EventArgs e)
+private void ofdButton_Click(object sender, EventArgs e)
         {
 
             if (outDialogBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -86,14 +89,14 @@ namespace SVG_Template_Processor
         private void imagePlaced_Click(object sender, System.EventArgs e)
             {   //if the text says embedded image open file dialog for the user to select the image that will be inserted into the templete
                 if(imagePlaced.Text.Equals("Embedded Image"))
-                {
+                {   
                     if (ftbEmbedded.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                         {
                             try
                             {   //change the text in the text box to the file path of the file to be embedded
                                 overlayImage.Text = System.IO.Path.GetFullPath(ftbEmbedded.FileName);
                                 overlayImage.ToolTip = "File Path to the file that will be embedded into the SVG"; // change the tool tip if it has been changed so user knows whats going on
-
+                                imagePlaced.ToolTip = "Choose file to be embedded into the template";
                         
                             }
                             catch (Exception ex)
@@ -102,10 +105,12 @@ namespace SVG_Template_Processor
                             }
                         }
                 }
-                else
+                else 
                 {
                     overlayImage.ToolTip = "URL based link that will be embedded into the SVG"; // change the tool top if it has been changed so the user knows whats going on
+                    imagePlaced.ToolTip = "Place the link of the image in the text box"; 
                 }
+                
             }
         //create the dropdown box for embedded image/ linked url
         private void CreateDropDownControl()
@@ -144,11 +149,19 @@ namespace SVG_Template_Processor
 
         private void svgConvertB_Click(object sender, EventArgs e)
         {
-            SVGCreationLibrary create = new SVGCreationLibrary(pngFiles.ToArray());
+            
+            validation.Validate();
+            if (validation.GetInvalidControls().Count != 0)
+                return;
+            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+           
+            
+            SVGCreationLibrary create = new SVGCreationLibrary(pngFiles.ToArray(), overlayImage.Text, outputfilepath.Text);
             create.buildSVG();
          
         }
 
+        
     }
 }
 

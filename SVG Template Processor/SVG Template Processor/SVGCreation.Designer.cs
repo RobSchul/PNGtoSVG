@@ -24,6 +24,9 @@ namespace SVG_Template_Processor
         #region Windows Form Designer generated code
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            DevExpress.XtraEditors.DXErrorProvider.ConditionValidationRule conditionValidationRule1 = new DevExpress.XtraEditors.DXErrorProvider.ConditionValidationRule();
+            DevExpress.XtraEditors.DXErrorProvider.ConditionValidationRule conditionValidationRule2 = new DevExpress.XtraEditors.DXErrorProvider.ConditionValidationRule();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SVGCreation));
             this.ftbcDialogBox = new System.Windows.Forms.OpenFileDialog();
             this.outDialogBox = new System.Windows.Forms.FolderBrowserDialog();
@@ -36,9 +39,11 @@ namespace SVG_Template_Processor
             this.imagePlaced = new DevExpress.XtraEditors.DropDownButton();
             this.overlayImage = new DevExpress.XtraEditors.TextEdit();
             this.removSeleButton = new DevExpress.XtraEditors.SimpleButton();
+            this.validation = new DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputfilepath.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.overlayImage.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.validation)).BeginInit();
             this.SuspendLayout();
             // 
             // ftbcDialogBox
@@ -102,11 +107,18 @@ namespace SVG_Template_Processor
             // 
             // outputfilepath
             // 
+            this.outputfilepath.EditValue = "";
             this.outputfilepath.Location = new System.Drawing.Point(445, 378);
             this.outputfilepath.Name = "outputfilepath";
+            this.outputfilepath.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
             this.outputfilepath.Size = new System.Drawing.Size(530, 20);
             this.outputfilepath.TabIndex = 10;
             this.outputfilepath.ToolTip = "Destination of where the converted SVG files will go";
+            conditionValidationRule1.ConditionOperator = DevExpress.XtraEditors.DXErrorProvider.ConditionOperator.IsNotBlank;
+            conditionValidationRule1.ErrorText = "Cannot be left empty";
+            conditionValidationRule1.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Warning;
+            conditionValidationRule1.Value1 = "Please Enter Your Name";
+            this.validation.SetValidationRule(this.outputfilepath, conditionValidationRule1);
             // 
             // imagePlaced
             // 
@@ -127,6 +139,10 @@ namespace SVG_Template_Processor
             this.overlayImage.Size = new System.Drawing.Size(530, 20);
             this.overlayImage.TabIndex = 12;
             this.overlayImage.ToolTip = "File Path to the file that will be embedded into the SVG";
+            conditionValidationRule2.ConditionOperator = DevExpress.XtraEditors.DXErrorProvider.ConditionOperator.IsNotBlank;
+            conditionValidationRule2.ErrorText = "Cannot be left empty";
+            conditionValidationRule2.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Warning;
+            this.validation.SetValidationRule(this.overlayImage, conditionValidationRule2);
             // 
             // removSeleButton
             // 
@@ -136,6 +152,10 @@ namespace SVG_Template_Processor
             this.removSeleButton.TabIndex = 13;
             this.removSeleButton.Text = "Remove Selected";
             this.removSeleButton.Click += new System.EventHandler(this.removSeleButton_Click);
+            // 
+            // validation
+            // 
+            this.validation.ValidationMode = DevExpress.XtraEditors.DXErrorProvider.ValidationMode.Auto;
             // 
             // SVGCreation
             // 
@@ -161,6 +181,7 @@ namespace SVG_Template_Processor
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputfilepath.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.overlayImage.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.validation)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -182,6 +203,7 @@ namespace SVG_Template_Processor
         private DevExpress.XtraEditors.TextEdit overlayImage;
         private System.Windows.Forms.OpenFileDialog ftbEmbedded;
         private DevExpress.XtraEditors.SimpleButton removSeleButton;
+        private DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider validation;
         
                     
 
