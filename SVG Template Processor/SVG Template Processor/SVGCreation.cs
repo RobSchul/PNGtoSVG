@@ -135,8 +135,10 @@ namespace SVG_Template_Processor
         private void removSeleButton_Click(object sender, EventArgs e)
         {   //remove files which the user wishes to unselect... will delete the files from the queue to be converted to SVG
             for (int i = sourceFiles.SelectedIndices.Count-1; i >= 0; i--)
-                {
+            {
+                 pngFiles.RemoveAt(sourceFiles.SelectedIndices[i]);
                  sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
+                 
                 }
         }
 
