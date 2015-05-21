@@ -12,7 +12,8 @@ namespace SVG_Template_Processor
 {
     public partial class SVGCreation : System.Windows.Forms.Form
     {
-        private System.Collections.Generic.List<string> pngFiles = new System.Collections.Generic.List<string>();
+        private System.Collections.Generic.List<string> pngFilePaths = new System.Collections.Generic.List<string>();
+        private System.Collections.Generic.List<string> pngFileNames = new System.Collections.Generic.List<string>();
     
         //iitalize 
         public SVGCreation()
@@ -61,7 +62,8 @@ private void ofdButton_Click(object sender, EventArgs e)
                     foreach (string FileName in this.ftbcDialogBox.FileNames)
                     {
                         sourceFiles.Items.Add(System.IO.Path.GetFileName(FileName));
-                        pngFiles.Add(ftbcDialogBox.FileName);
+                        pngFilePaths.Add(System.IO.Path.GetFullPath(FileName));
+                        pngFileNames.Add(System.IO.Path.GetFileName(FileName));
                         
 
                     }
@@ -141,7 +143,7 @@ private void ofdButton_Click(object sender, EventArgs e)
         {   //remove files which the user wishes to unselect... will delete the files from the queue to be converted to SVG
             for (int i = sourceFiles.SelectedIndices.Count-1; i >= 0; i--)
             {
-                 pngFiles.RemoveAt(sourceFiles.SelectedIndices[i]);
+                 pngFilePaths.RemoveAt(sourceFiles.SelectedIndices[i]);
                  sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
                  
                 }
@@ -154,9 +156,7 @@ private void ofdButton_Click(object sender, EventArgs e)
             if (validation.GetInvalidControls().Count != 0)
                 return;
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
-           
-            
-            SVGCreationLibrary create = new SVGCreationLibrary(pngFiles.ToArray(), overlayImage.Text, outputfilepath.Text);
+            SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), imagePlaced.Text, outputfilepath.Text, pngFileNames.ToArray());
             create.buildSVG();
          
         }
