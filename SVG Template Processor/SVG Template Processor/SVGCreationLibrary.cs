@@ -59,6 +59,7 @@ namespace SVG_Template_Processor
                     ms.Dispose(); //cleaning
                     return Convert.ToBase64String(byteImage); //return the convert
                 }
+
         /// <summary>
         /// creation of the svg file with an embedded image 
         /// </summary>
