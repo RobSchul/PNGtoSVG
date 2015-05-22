@@ -16,7 +16,7 @@ namespace SVG_Template_Processor
         private string type ="";
         private string outLocation = "";
         private string linkedImageURL = "";
-        private string urlFinalImage = "";
+       // private string urlFinalImage = "";
         
 
         public SVGCreationLibrary(string[] pngFileLocation ,string sType, string locat, string[] pngFile)
