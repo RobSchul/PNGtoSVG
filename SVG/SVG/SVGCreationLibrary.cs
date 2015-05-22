@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Xml;
 
 namespace SVG_Template_Processor
-{   
+{
     class SVGCreationLibrary
     {
         private string[] pngFilePaths;
@@ -18,35 +18,35 @@ namespace SVG_Template_Processor
         private string outLocation = "";
         private string linkedImageURL = "";
         private string urlFinalImage = "";
-        public SVGCreationLibrary(string[] pngFileLocation ,string sType, string locat, string[] pngFile)
-            {   //creation of everything
-                pngFilePaths = pngFileLocation;
-                type = sType;
-                outLocation = locat;
-                pngFileNames = pngFile;
-            }
+        public SVGCreationLibrary(string[] pngFileLocation, string sType, string locat, string[] pngFile)
+        {   //creation of everything
+            pngFilePaths = pngFileLocation;
+            type = sType;
+            outLocation = locat;
+            pngFileNames = pngFile;
+        }
         private Rectangle[] getRegions(string file)
-            {
-                imageProcessingLibrary process = new imageProcessingLibrary(file);
-                Rectangle[] rect = process.getTRegions(); 
-                return rect;
-            }
+        {
+            imageProcessingLibrary process = new imageProcessingLibrary(file);
+            Rectangle[] rect = process.getTRegions();
+            return rect;
+        }
 
         /// <summary>
         /// build the svg depending on what was chosen 
         /// either embedded or linked image
         /// </summary>
         public void buildSVG()
-            {   
-                if (type.Equals("Embedded Image"))
-                    embeddedImage(); //send to the embedding method
-                else
-                {
-                    linkedImage(); // sent to the linked method
-                }
-            
-             
+        {
+            if (type.Equals("Embedded Image"))
+                embeddedImage(); //send to the embedding method
+            else
+            {
+                linkedImage(); // sent to the linked method
             }
+
+
+        }
 
         /// <summary>
         /// change the bitmap file into a base64 string for the svg file
@@ -54,13 +54,13 @@ namespace SVG_Template_Processor
         /// <param name="myBitmap"></param>
         /// <returns></returns>
         private string ImageToBase64(Bitmap myBitmap)
-                {  //change the bitmap file into base64 for the svg file
-                    MemoryStream ms = new MemoryStream();
-                    myBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    byte[] byteImage = ms.ToArray();
-                    ms.Dispose(); //cleaning
-                    return Convert.ToBase64String(byteImage); //return the convert
-                }
+        {  //change the bitmap file into base64 for the svg file
+            MemoryStream ms = new MemoryStream();
+            myBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            byte[] byteImage = ms.ToArray();
+            ms.Dispose(); //cleaning
+            return Convert.ToBase64String(byteImage); //return the convert
+        }
 
         /// <summary>
         /// creation of the svg file with an embedded image 
@@ -99,7 +99,7 @@ namespace SVG_Template_Processor
             {
                 string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
                 <svg version=""1.1"" id=""Layer_1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
-                picEmbedd += "<g>" +"" + "</g>"; 
+                picEmbedd += "<g>" + "" + "</g>";
                 picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
                 string base64 = ImageToBase64(myBitmap); // change the image into base64 for the svg
                 picEmbedd += "" + base64 + "\" transform=\"matrix(0.24 0 0 0.24 0 0)\"></image> </svg>"; // end of the svg file
@@ -110,7 +110,7 @@ namespace SVG_Template_Processor
                     file.Dispose();
                 } // cleaning
             });
-            
+
         }
 
         public string LinkedImageURL
@@ -145,6 +145,6 @@ namespace SVG_Template_Processor
             set { pngFileNames = value; }
         }
 
-       
+
     }
 }
