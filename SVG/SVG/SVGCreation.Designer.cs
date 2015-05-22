@@ -110,7 +110,6 @@ namespace SVG_Template_Processor
             this.outputfilepath.EditValue = "";
             this.outputfilepath.Location = new System.Drawing.Point(445, 378);
             this.outputfilepath.Name = "outputfilepath";
-            this.outputfilepath.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
             this.outputfilepath.Size = new System.Drawing.Size(530, 20);
             this.outputfilepath.TabIndex = 10;
             this.outputfilepath.ToolTip = "Destination of where the converted SVG files will go";
