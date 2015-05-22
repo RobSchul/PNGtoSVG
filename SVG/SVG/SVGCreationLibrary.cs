@@ -11,14 +11,13 @@ using System.Xml;
 namespace SVG_Template_Processor
 {   
     class SVGCreationLibrary
-    {   private string[] pngFilePaths;
+    {
+        private string[] pngFilePaths;
         private string[] pngFileNames;
-        private string type ="";
+        private string type = "";
         private string outLocation = "";
         private string linkedImageURL = "";
-       // private string urlFinalImage = "";
-        
-
+        private string urlFinalImage = "";
         public SVGCreationLibrary(string[] pngFileLocation ,string sType, string locat, string[] pngFile)
             {   //creation of everything
                 pngFilePaths = pngFileLocation;
@@ -39,25 +38,6 @@ namespace SVG_Template_Processor
         /// </summary>
         public void buildSVG()
             {   
-                var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
-            
-                Parallel.ForEach(pathsAndName, pngFile => {
-                    string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
-                        <svg version=""1.1"" id=""Layer_1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""> <image overflow=""visible"""; //top half of svg
-                            Bitmap myBitmap = new Bitmap(pngFile.Path); // create bitmap of the image
-                            picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
-                            string base64 = ImageToBase64(myBitmap); // change the image into base64 for the svg
-                            picEmbedd += "" + base64 + "\" transform=\"matrix(0.24 0 0 0.24 0 0)\"></image> </svg>"; // end of the svg file
-                            myBitmap.Dispose(); // dispose of the image
-                            using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFile.Name + ".svg")) // write the file to the certian location
-                            {
-                                file.Write(picEmbedd); // write to location
-                                file.Dispose();
-                            } // cleaning
-
-            });
-                
-                
                 if (type.Equals("Embedded Image"))
                     embeddedImage(); //send to the embedding method
                 else
@@ -87,7 +67,24 @@ namespace SVG_Template_Processor
         /// </summary>
         private void embeddedImage()
         {
-            
+            var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
+
+            Parallel.ForEach(pathsAndName, pngFile =>
+            {
+                string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
+                        <svg version=""1.1"" id=""Layer_1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""> <image overflow=""visible"""; //top half of svg
+                Bitmap myBitmap = new Bitmap(pngFile.Path); // create bitmap of the image
+                picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
+                string base64 = ImageToBase64(myBitmap); // change the image into base64 for the svg
+                picEmbedd += "" + base64 + "\" transform=\"matrix(0.24 0 0 0.24 0 0)\"></image> </svg>"; // end of the svg file
+                myBitmap.Dispose(); // dispose of the image
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFile.Name + ".svg")) // write the file to the certian location
+                {
+                    file.Write(picEmbedd); // write to location
+                    file.Dispose();
+                } // cleaning
+
+            });
         }
 
         /// <summary>
@@ -96,8 +93,9 @@ namespace SVG_Template_Processor
         private void linkedImage()
         {
 
-            /*
-            foreach (var pngFile in pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name })) // go through the files 
+            var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
+
+            Parallel.ForEach(pathsAndName, pngFile =>
             {
                 string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
                 <svg version=""1.1"" id=""Layer_1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
@@ -111,51 +109,42 @@ namespace SVG_Template_Processor
                     file.Write(picEmbedd); // write to location
                     file.Dispose();
                 } // cleaning
-            }
-            */
+            });
+            
         }
 
-        public void setLinkedImage(string link)
+        public string LinkedImageURL
         {
-            linkedImageURL = link;
+            get { return linkedImageURL; }
+            set { linkedImageURL = value; }
         }
-        public string getLinkedImage()
+        public string OutLocation
         {
-            return linkedImageURL;
+            get { return outLocation; }
+            set { outLocation = value; }
         }
-        
-        /// <summary>
-        /// set the type of image that will be put in the SVG
-        /// either Embedded or linked image
-        /// </summary>
-        /// /// <param name="sType"></param>
-        public void setType(string sType)
+        public string UrlFinalImage
         {
-            type = sType;
+            get { return urlFinalImage; }
+            set { urlFinalImage = value; }
         }
-        /// <summary>
-        /// set the location that the file will be put
-        /// </summary>
-        /// <param name="locat"></param>
-        public void setOutLoca(string locat)
+        public string[] PngFilePaths
         {
-            outLocation = locat;
+            get { return pngFilePaths; }
+            set { pngFilePaths = value; }
         }
-        /// <summary>
-        /// get the type of image that is going to be put into the SVG
-        /// </summary>
-        /// <returns>Embedded Image, Linked Image will, or null</returns>
-        public string getType()
+        public string Type
         {
-            return type;
+            get { return type; }
+            set { type = value; }
         }
-        /// <summary>
-        /// get the location that the files will be put after turning into an SVG
-        /// </summary>
-        /// <returns></returns>
-        public string getOutLoca()
+
+        public string[] PngFileNames
         {
-            return outLocation;
+            get { return pngFileNames; }
+            set { pngFileNames = value; }
         }
+
+       
     }
 }
