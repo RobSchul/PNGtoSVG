@@ -98,17 +98,10 @@ namespace SVG_Template_Processor
             Parallel.ForEach(pathsAndName, pngFile =>
             {
                 string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
-                <svg version=""1.1"" id=""Layer_1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
-                picEmbedd += "<g>" + "" + "</g>";
-                picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
-                string base64 = ImageToBase64(myBitmap); // change the image into base64 for the svg
-                picEmbedd += "" + base64 + "\" transform=\"matrix(0.24 0 0 0.24 0 0)\"></image> </svg>"; // end of the svg file
-                myBitmap.Dispose(); // dispose of the image
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFile.Name + ".svg")) // write the file to the certian location
-                {
-                    file.Write(picEmbedd); // write to location
-                    file.Dispose();
-                } // cleaning
+                <svg xmlns=""http://www.w3.org/2000/svg"" xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
+                picEmbedd += "<g>" + @"<image x=""1"" y=""1"" width=""469.999993"" height=""307"" id=""svg_1"" xlink:href=""";
+                picEmbedd += "";
+
             });
 
         }
