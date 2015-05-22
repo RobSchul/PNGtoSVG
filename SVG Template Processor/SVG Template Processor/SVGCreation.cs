@@ -144,6 +144,7 @@ private void ofdButton_Click(object sender, EventArgs e)
             for (int i = sourceFiles.SelectedIndices.Count-1; i >= 0; i--)
             {
                  pngFilePaths.RemoveAt(sourceFiles.SelectedIndices[i]);
+                 pngFileNames.RemoveAt(sourceFiles.SelectedIndices[i]);
                  sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
                  
                 }

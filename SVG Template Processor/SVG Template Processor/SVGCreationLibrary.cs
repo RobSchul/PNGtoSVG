@@ -15,6 +15,9 @@ namespace SVG_Template_Processor
         private string[] pngFileNames;
         private string type ="";
         private string outLocation = "";
+        private string linkedImageURL = "";
+        private string urlFinalImage = "";
+        
 
         public SVGCreationLibrary(string[] pngFileLocation ,string sType, string locat, string[] pngFile)
             {   //creation of everything
@@ -35,7 +38,26 @@ namespace SVG_Template_Processor
         /// either embedded or linked image
         /// </summary>
         public void buildSVG()
-            {
+            {   
+                var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
+            
+                Parallel.ForEach(pathsAndName, pngFile => {
+                    string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
+                        <svg version=""1.1"" id=""Layer_1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""> <image overflow=""visible"""; //top half of svg
+                            Bitmap myBitmap = new Bitmap(pngFile.Path); // create bitmap of the image
+                            picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
+                            string base64 = ImageToBase64(myBitmap); // change the image into base64 for the svg
+                            picEmbedd += "" + base64 + "\" transform=\"matrix(0.24 0 0 0.24 0 0)\"></image> </svg>"; // end of the svg file
+                            myBitmap.Dispose(); // dispose of the image
+                            using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFile.Name + ".svg")) // write the file to the certian location
+                            {
+                                file.Write(picEmbedd); // write to location
+                                file.Dispose();
+                            } // cleaning
+
+            });
+                
+                
                 if (type.Equals("Embedded Image"))
                     embeddedImage(); //send to the embedding method
                 else
@@ -51,7 +73,7 @@ namespace SVG_Template_Processor
         /// </summary>
         /// <param name="myBitmap"></param>
         /// <returns></returns>
-        public string ImageToBase64(Bitmap myBitmap)
+        private string ImageToBase64(Bitmap myBitmap)
                 {  //change the bitmap file into base64 for the svg file
                     MemoryStream ms = new MemoryStream();
                     myBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -63,48 +85,45 @@ namespace SVG_Template_Processor
         /// <summary>
         /// creation of the svg file with an embedded image 
         /// </summary>
-        public void embeddedImage()
+        private void embeddedImage()
         {
-            foreach (var pngFile in pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name })) // go through the files 
-            {
-                string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
-                <svg version=""1.1"" id=""Layer_1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""> <image overflow=""visible"""; //top half of svg
-                Bitmap myBitmap = new Bitmap(pngFile.Path); // create bitmap of the image
-                picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
-                string base64 = ImageToBase64(myBitmap); // change the image into base64 for the svg
-                picEmbedd += "" + base64 + "\" transform=\"matrix(0.24 0 0 0.24 0 0)\"></image> </svg>"; // end of the svg file
-                myBitmap.Dispose(); // dispose of the image
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFile.Name + ".svg")) // write the file to the certian location
-                {   file.Write(picEmbedd); // write to location
-                    file.Dispose();} // cleaning
-            }
+            
         }
 
         /// <summary>
         /// creation of the svg file with a linked image 
         /// </summary>
-        public void linkedImage()
+        private void linkedImage()
         {
-            foreach (string pngFile in pngFilePaths)
-            {
-                Bitmap myBitmap = new Bitmap(pngFile);
-                int hight = myBitmap.Height;
-                int width = myBitmap.Width;
 
-                Color[][] colorMatrix = new Color[width][];
-                for (int i = 0; i < width; i++)
+            /*
+            foreach (var pngFile in pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name })) // go through the files 
+            {
+                string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
+                <svg version=""1.1"" id=""Layer_1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
+                picEmbedd += "<g>" +"" + "</g>"; 
+                picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
+                string base64 = ImageToBase64(myBitmap); // change the image into base64 for the svg
+                picEmbedd += "" + base64 + "\" transform=\"matrix(0.24 0 0 0.24 0 0)\"></image> </svg>"; // end of the svg file
+                myBitmap.Dispose(); // dispose of the image
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFile.Name + ".svg")) // write the file to the certian location
                 {
-                    colorMatrix[i] = new Color[hight];
-                    for (int j = 0; j < hight; j++)
-                    {
-                        colorMatrix[i][j] = new Color();
-                        colorMatrix[i][j] = myBitmap.GetPixel(i, j);
-                    }
-                }
+                    file.Write(picEmbedd); // write to location
+                    file.Dispose();
+                } // cleaning
             }
-                
+            */
         }
 
+        public void setLinkedImage(string link)
+        {
+            linkedImageURL = link;
+        }
+        public string getLinkedImage()
+        {
+            return linkedImageURL;
+        }
+        
         /// <summary>
         /// set the type of image that will be put in the SVG
         /// either Embedded or linked image
