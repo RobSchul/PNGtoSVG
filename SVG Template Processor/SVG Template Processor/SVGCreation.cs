@@ -19,8 +19,6 @@ namespace SVG_Template_Processor
         public SVGCreation()
         {
             InitializeComponent();
-            CreateDropDownControl();
-            
         }
 private void ofdButton_Click(object sender, EventArgs e)
         {
@@ -88,81 +86,31 @@ private void ofdButton_Click(object sender, EventArgs e)
         //automated
         private void ftbEmbedded_FileOk(object sender, System.ComponentModel.CancelEventArgs e) { }
 
-        private void imagePlaced_Click(object sender, System.EventArgs e)
-            {   //if the text says embedded image open file dialog for the user to select the image that will be inserted into the templete
-                if(imagePlaced.Text.Equals("Embedded Image"))
-                {   
-                    if (ftbEmbedded.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                        {
-                            try
-                            {   //change the text in the text box to the file path of the file to be embedded
-                                overlayImage.Text = System.IO.Path.GetFullPath(ftbEmbedded.FileName);
-                                overlayImage.ToolTip = "File Path to the file that will be embedded into the SVG"; // change the tool tip if it has been changed so user knows whats going on
-                                imagePlaced.ToolTip = "Choose file to be embedded into the template";
-                        
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Windows.Forms.MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message); // error message
-                            }
-                        }
-                }
-                else 
-                {
-                    overlayImage.ToolTip = "URL based link that will be embedded into the SVG"; // change the tool top if it has been changed so the user knows whats going on
-                    imagePlaced.ToolTip = "Place the link of the image in the text box"; 
-                }
-                
-            }
-        //create the dropdown box for embedded image/ linked url
-        private void CreateDropDownControl()
-        {
-         
-        imagePlaced.DropDownControl = CreateDXPopupMenu();
-        
-        }
-        private DevExpress.Utils.Menu.DXPopupMenu CreateDXPopupMenu()
-        {  //creation of the drop down menu for drop down box
-            DevExpress.Utils.Menu.DXPopupMenu menu = new DevExpress.Utils.Menu.DXPopupMenu();
-                menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Embedded Image", OnItemClick));
-                menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Linked Image", OnItemClick));
-            
-            return menu;
-        }
-        private void OnItemClick(object sender, EventArgs e)
-        {   //finding out what was selected on the action event of clicking something in the drop down menu
-            DevExpress.Utils.Menu.DXMenuItem item = sender as DevExpress.Utils.Menu.DXMenuItem;
-            imagePlaced.Text = item.Caption; // change the text of the button for the user
-            if(!item.Equals("Embedded Image"))
-            {   //if it is linked image change the tool tip for the user
-                overlayImage.ToolTip = "URL based link that will be embedded into the SVG";
-            }
-        }
+
 
         private void removSeleButton_Click(object sender, EventArgs e)
         {   //remove files which the user wishes to unselect... will delete the files from the queue to be converted to SVG
-            for (int i = sourceFiles.SelectedIndices.Count-1; i >= 0; i--)
+            for (int i = sourceFiles.SelectedIndices.Count - 1; i >= 0; i--)
             {
-                 pngFilePaths.RemoveAt(sourceFiles.SelectedIndices[i]);
-                 pngFileNames.RemoveAt(sourceFiles.SelectedIndices[i]);
-                 sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
-                 
-                }
+                pngFilePaths.RemoveAt(sourceFiles.SelectedIndices[i]);
+                pngFileNames.RemoveAt(sourceFiles.SelectedIndices[i]);
+                sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
+
+            }
+
         }
 
         private void svgConvertB_Click(object sender, EventArgs e)
         {
-            
+
             validation.Validate();
             if (validation.GetInvalidControls().Count != 0)
                 return;
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), imagePlaced.Text, outputfilepath.Text, pngFileNames.ToArray());
+            SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray());
             create.buildSVG();
-         
-        }
 
-        
+        }
     }
 }
 

@@ -36,10 +36,10 @@ namespace SVG_Template_Processor
             this.sourceFiles = new DevExpress.XtraEditors.ListBoxControl();
             this.ftbEmbedded = new System.Windows.Forms.OpenFileDialog();
             this.outputfilepath = new DevExpress.XtraEditors.TextEdit();
-            this.imagePlaced = new DevExpress.XtraEditors.DropDownButton();
             this.overlayImage = new DevExpress.XtraEditors.TextEdit();
             this.removSeleButton = new DevExpress.XtraEditors.SimpleButton();
             this.validation = new DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider(this.components);
+            this.urlButton = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputfilepath.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.overlayImage.Properties)).BeginInit();
@@ -69,7 +69,7 @@ namespace SVG_Template_Processor
             // ofdButton
             // 
             this.ofdButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ofdButton.Location = new System.Drawing.Point(275, 372);
+            this.ofdButton.Location = new System.Drawing.Point(275, 453);
             this.ofdButton.Name = "ofdButton";
             this.ofdButton.Size = new System.Drawing.Size(120, 26);
             this.ofdButton.TabIndex = 8;
@@ -80,7 +80,7 @@ namespace SVG_Template_Processor
             // svgConvertB
             // 
             this.svgConvertB.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.svgConvertB.Location = new System.Drawing.Point(584, 563);
+            this.svgConvertB.Location = new System.Drawing.Point(584, 533);
             this.svgConvertB.Name = "svgConvertB";
             this.svgConvertB.Size = new System.Drawing.Size(120, 26);
             this.svgConvertB.TabIndex = 9;
@@ -108,7 +108,7 @@ namespace SVG_Template_Processor
             // outputfilepath
             // 
             this.outputfilepath.EditValue = "";
-            this.outputfilepath.Location = new System.Drawing.Point(445, 378);
+            this.outputfilepath.Location = new System.Drawing.Point(445, 459);
             this.outputfilepath.Name = "outputfilepath";
             this.outputfilepath.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
             this.outputfilepath.Size = new System.Drawing.Size(530, 20);
@@ -120,21 +120,9 @@ namespace SVG_Template_Processor
             conditionValidationRule1.Value1 = "Please Enter Your Name";
             this.validation.SetValidationRule(this.outputfilepath, conditionValidationRule1);
             // 
-            // imagePlaced
-            // 
-            this.imagePlaced.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.imagePlaced.DropDownArrowStyle = DevExpress.XtraEditors.DropDownArrowStyle.SplitButton;
-            this.imagePlaced.Location = new System.Drawing.Point(275, 451);
-            this.imagePlaced.Name = "imagePlaced";
-            this.imagePlaced.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.imagePlaced.Size = new System.Drawing.Size(135, 26);
-            this.imagePlaced.TabIndex = 11;
-            this.imagePlaced.Text = "Embedded Image";
-            this.imagePlaced.Click += new System.EventHandler(this.imagePlaced_Click);
-            // 
             // overlayImage
             // 
-            this.overlayImage.Location = new System.Drawing.Point(445, 457);
+            this.overlayImage.Location = new System.Drawing.Point(445, 368);
             this.overlayImage.Name = "overlayImage";
             this.overlayImage.Size = new System.Drawing.Size(530, 20);
             this.overlayImage.TabIndex = 12;
@@ -146,7 +134,7 @@ namespace SVG_Template_Processor
             // 
             // removSeleButton
             // 
-            this.removSeleButton.Location = new System.Drawing.Point(981, 163);
+            this.removSeleButton.Location = new System.Drawing.Point(1008, 185);
             this.removSeleButton.Name = "removSeleButton";
             this.removSeleButton.Size = new System.Drawing.Size(120, 26);
             this.removSeleButton.TabIndex = 13;
@@ -157,15 +145,23 @@ namespace SVG_Template_Processor
             // 
             this.validation.ValidationMode = DevExpress.XtraEditors.DXErrorProvider.ValidationMode.Auto;
             // 
+            // urlButton
+            // 
+            this.urlButton.Location = new System.Drawing.Point(275, 362);
+            this.urlButton.Name = "urlButton";
+            this.urlButton.Size = new System.Drawing.Size(120, 26);
+            this.urlButton.TabIndex = 14;
+            this.urlButton.Text = "URL Link";
+            // 
             // SVGCreation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1320, 729);
+            this.Controls.Add(this.urlButton);
             this.Controls.Add(this.removSeleButton);
             this.Controls.Add(this.overlayImage);
-            this.Controls.Add(this.imagePlaced);
             this.Controls.Add(this.outputfilepath);
             this.Controls.Add(this.sourceFiles);
             this.Controls.Add(this.svgConvertB);
@@ -199,11 +195,11 @@ namespace SVG_Template_Processor
         private DevExpress.XtraEditors.SimpleButton svgConvertB;
         private DevExpress.XtraEditors.ListBoxControl sourceFiles;
         private DevExpress.XtraEditors.TextEdit outputfilepath;
-        private DevExpress.XtraEditors.DropDownButton imagePlaced;
         private DevExpress.XtraEditors.TextEdit overlayImage;
         private System.Windows.Forms.OpenFileDialog ftbEmbedded;
         private DevExpress.XtraEditors.SimpleButton removSeleButton;
         private DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider validation;
+        private DevExpress.XtraEditors.SimpleButton urlButton;
         
                     
 
