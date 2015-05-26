@@ -81,11 +81,6 @@ namespace SVG_Template_Processor
             } //cleaning
         }
         
-        private void save(Image img)
-        {
-
-        }
-
         /// <summary>
         /// creation of the svg file with an embedded image 
         /// </summary>

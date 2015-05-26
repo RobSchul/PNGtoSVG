@@ -111,6 +111,16 @@ private void ofdButton_Click(object sender, EventArgs e)
             create.buildSVG();
 
         }
+
+        private void urlButton_Click(object sender, EventArgs e)
+        {
+            validation.Validate();
+            if (validation.GetInvalidControls().Count != 0)
+                return;
+            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray());
+            create.buildSVG();
+        }
     }
 }
 

@@ -26,7 +26,6 @@ namespace SVG_Template_Processor
         {
             this.components = new System.ComponentModel.Container();
             DevExpress.XtraEditors.DXErrorProvider.ConditionValidationRule conditionValidationRule1 = new DevExpress.XtraEditors.DXErrorProvider.ConditionValidationRule();
-            DevExpress.XtraEditors.DXErrorProvider.ConditionValidationRule conditionValidationRule2 = new DevExpress.XtraEditors.DXErrorProvider.ConditionValidationRule();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SVGCreation));
             this.ftbcDialogBox = new System.Windows.Forms.OpenFileDialog();
             this.outDialogBox = new System.Windows.Forms.FolderBrowserDialog();
@@ -127,10 +126,6 @@ namespace SVG_Template_Processor
             this.overlayImage.Size = new System.Drawing.Size(530, 20);
             this.overlayImage.TabIndex = 12;
             this.overlayImage.ToolTip = "File Path to the file that will be embedded into the SVG";
-            conditionValidationRule2.ConditionOperator = DevExpress.XtraEditors.DXErrorProvider.ConditionOperator.IsNotBlank;
-            conditionValidationRule2.ErrorText = "Cannot be left empty";
-            conditionValidationRule2.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Warning;
-            this.validation.SetValidationRule(this.overlayImage, conditionValidationRule2);
             // 
             // removSeleButton
             // 
@@ -152,6 +147,7 @@ namespace SVG_Template_Processor
             this.urlButton.Size = new System.Drawing.Size(120, 26);
             this.urlButton.TabIndex = 14;
             this.urlButton.Text = "URL Link";
+            this.urlButton.Click += new System.EventHandler(this.urlButton_Click);
             // 
             // SVGCreation
             // 
