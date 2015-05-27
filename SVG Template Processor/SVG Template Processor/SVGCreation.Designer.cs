@@ -39,6 +39,8 @@ namespace SVG_Template_Processor
             this.removSeleButton = new DevExpress.XtraEditors.SimpleButton();
             this.validation = new DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider(this.components);
             this.urlButton = new DevExpress.XtraEditors.SimpleButton();
+            this.bW = new System.ComponentModel.BackgroundWorker();
+            this.labelControl = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputfilepath.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.overlayImage.Properties)).BeginInit();
@@ -149,12 +151,29 @@ namespace SVG_Template_Processor
             this.urlButton.Text = "URL Link";
             this.urlButton.Click += new System.EventHandler(this.urlButton_Click);
             // 
+            // bW
+            // 
+            this.bW.WorkerReportsProgress = true;
+            this.bW.WorkerSupportsCancellation = true;
+            this.bW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bW_DoWork);
+            // 
+            // labelControl
+            // 
+            this.labelControl.Appearance.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.labelControl.Appearance.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelControl.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.labelControl.Location = new System.Drawing.Point(88, 64);
+            this.labelControl.Name = "labelControl";
+            this.labelControl.Size = new System.Drawing.Size(0, 18);
+            this.labelControl.TabIndex = 15;
+            // 
             // SVGCreation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1320, 729);
+            this.Controls.Add(this.labelControl);
             this.Controls.Add(this.urlButton);
             this.Controls.Add(this.removSeleButton);
             this.Controls.Add(this.overlayImage);
@@ -175,6 +194,7 @@ namespace SVG_Template_Processor
             ((System.ComponentModel.ISupportInitialize)(this.overlayImage.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.validation)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -196,6 +216,11 @@ namespace SVG_Template_Processor
         private DevExpress.XtraEditors.SimpleButton removSeleButton;
         private DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider validation;
         private DevExpress.XtraEditors.SimpleButton urlButton;
+        private System.ComponentModel.BackgroundWorker bW;
+        private DevExpress.XtraEditors.LabelControl labelControl;
+
+
+        
         
                     
 

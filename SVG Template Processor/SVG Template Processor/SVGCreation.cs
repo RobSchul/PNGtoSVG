@@ -9,38 +9,36 @@ using System.Text.RegularExpressions;
 
 
 namespace SVG_Template_Processor
-{
+{ 
     public partial class SVGCreation : System.Windows.Forms.Form
     {
+        
         private System.Collections.Generic.List<string> pngFilePaths = new System.Collections.Generic.List<string>();
         private System.Collections.Generic.List<string> pngFileNames = new System.Collections.Generic.List<string>();
     
-        //iitalize 
+        //initalize 
         public SVGCreation()
         {
             InitializeComponent();
+            
         }
-private void ofdButton_Click(object sender, EventArgs e)
-        {
 
-            if (outDialogBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                try
-                {   
-                    string tempFolder = System.IO.Path.GetFullPath(outDialogBox.SelectedPath);
-                    outputfilepath.Text = System.IO.Path.GetFullPath(outDialogBox.SelectedPath);
-                    
-                }
-                catch (Exception ex)
+         private void ofdButton_Click(object sender, EventArgs e)
                 {
-                    System.Windows.Forms.MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+
+                    if (outDialogBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        try
+                        {   
+                            string tempFolder = System.IO.Path.GetFullPath(outDialogBox.SelectedPath);
+                            outputfilepath.Text = System.IO.Path.GetFullPath(outDialogBox.SelectedPath);
+                    
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Windows.Forms.MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
-        }
-        //automated
-        private void Form2_Load(object sender)
-        {
-
         }
         //automated
         private void Form2_Load(object sender, EventArgs e)
@@ -103,13 +101,23 @@ private void ofdButton_Click(object sender, EventArgs e)
         private void svgConvertB_Click(object sender, EventArgs e)
         {
 
-            validation.Validate();
-            if (validation.GetInvalidControls().Count != 0)
-                return;
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray());
-            create.buildSVG();
+            bW.DoWork += new DoWorkEventHandler(bW_DoWork);
+            bW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bW_RunWorkerCompleted);
 
+            if(bW.IsBusy != true)
+            {
+                bW.RunWorkerAsync();
+            }
+            /*
+             * validation.Validate();
+             if (validation.GetInvalidControls().Count != 0)
+                 return;
+             this.DialogResult = System.Windows.Forms.DialogResult.OK;
+             if (pngFileNames.Count > 0)
+             {   SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), "embed");
+                 create.buildSVG();
+             }
+             * */
         }
 
         private void urlButton_Click(object sender, EventArgs e)
@@ -118,9 +126,50 @@ private void ofdButton_Click(object sender, EventArgs e)
             if (validation.GetInvalidControls().Count != 0)
                 return;
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray());
-            create.buildSVG();
+            if (pngFileNames.Count > 0)
+            {
+                SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), "linked");
+                create.buildSVG();
+            }
         }
+
+        private void bW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            validation.Validate();
+            if (validation.GetInvalidControls().Count != 0)
+                return;
+            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            if (pngFileNames.Count > 0)
+            {
+                SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), "embed");
+                create.buildSVG();
+            }
+        }
+
+        private void bW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if ((e.Cancelled == true))
+            {
+                this.labelControl.Text = "Canceled!";
+            }
+
+            else if (!(e.Error == null))
+            {
+                this.labelControl.Text = ("Error: " + e.Error.Message);
+            }
+
+            else
+            {
+                this.labelControl.Text = "Done!";
+            }
+            
+        }
+       
+       
+        
+        
+
+        
     }
 }
 

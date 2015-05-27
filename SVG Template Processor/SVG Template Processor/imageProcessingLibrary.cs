@@ -12,11 +12,12 @@ using System.Windows.Forms;
 namespace SVG_Template_Processor
 {
     class imageProcessingLibrary
-    {private string filePath;
-        
-        public  imageProcessingLibrary(string file)
+    {
+        private Bitmap myBitmap;
+
+        public  imageProcessingLibrary(Bitmap bits)
             {
-                filePath = file;
+                myBitmap = bits;
            
             }
         /// <summary>
@@ -25,7 +26,6 @@ namespace SVG_Template_Processor
         /// </summary>
         public Rectangle[] getTRegions()
         {
-            Bitmap myBitmap = new Bitmap(filePath);
             BitmapData bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
             List<Point> Points = findTPoints(myBitmap, bmData);
              return mapTpoints(Points);
@@ -87,20 +87,21 @@ namespace SVG_Template_Processor
             }
             
             myBitmap.UnlockBits(bmData);
-            myBitmap.Dispose();
+            //myBitmap.Dispose();
             myBitmap = null;
             return Points;
 
         }
 
-
-        public Bitmap Transparent2Color(string file)
+        public Bitmap MyBitmap
         {
-            Image image = Image.FromFile(file);
-            Bitmap myBitmap = new Bitmap(file);
-            Color white = Color.White;
-            Bitmap bmp2 = new Bitmap(myBitmap.Width, myBitmap.Height);
-            filePath = file;
+            get { return myBitmap; }
+            set { myBitmap = value; }
+        }
+
+        public Bitmap Transparent2Color()
+        {   Color white = Color.White;
+            
             Rectangle[] rect = getTRegions();
 
             
