@@ -162,6 +162,7 @@ namespace SVG_Template_Processor
             {
                 this.labelControl.Text = "Done!";
             }
+            bW.Dispose();
             
         }
        

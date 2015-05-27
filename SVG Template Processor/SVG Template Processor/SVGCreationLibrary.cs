@@ -32,7 +32,7 @@ namespace SVG_Template_Processor
         {
             imageProcessingLibrary process = new imageProcessingLibrary(file);
             imageProcessingLibrary process2 = new imageProcessingLibrary(file);
-            Rectangle[] rect = process.getTRegions(); process2.Transparent2Color();
+            Rectangle[] rect = process.getTRegions(); process2.Transparent2Color(); 
             return rect;
         }
 
