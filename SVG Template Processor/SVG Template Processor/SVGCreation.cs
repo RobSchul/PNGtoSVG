@@ -103,7 +103,7 @@ namespace SVG_Template_Processor
 
             bW.DoWork += new DoWorkEventHandler(bW_DoWork);
             bW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bW_RunWorkerCompleted);
-
+            labelControl.Text = "Working";
             if(bW.IsBusy != true)
             {
                 bW.RunWorkerAsync();
@@ -164,6 +164,24 @@ namespace SVG_Template_Processor
             }
             bW.Dispose();
             
+        }
+
+        private void removeAll_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Are you sure you want to remove all files from the list", "Remove All Files", System.Windows.Forms.MessageBoxButtons.YesNo);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                for (int i = sourceFiles.ItemCount - 1; i >= 0; i--)
+                {
+                    pngFilePaths.RemoveAt(i);
+                    pngFileNames.RemoveAt(i);
+                    sourceFiles.Items.RemoveAt(i);
+
+                };
+            }
+            else
+            { //do nothing 
+            }
         }
        
        

@@ -41,6 +41,7 @@ namespace SVG_Template_Processor
             this.urlButton = new DevExpress.XtraEditors.SimpleButton();
             this.bW = new System.ComponentModel.BackgroundWorker();
             this.labelControl = new DevExpress.XtraEditors.LabelControl();
+            this.removeAll = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputfilepath.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.overlayImage.Properties)).BeginInit();
@@ -167,12 +168,22 @@ namespace SVG_Template_Processor
             this.labelControl.Size = new System.Drawing.Size(0, 18);
             this.labelControl.TabIndex = 15;
             // 
+            // removeAll
+            // 
+            this.removeAll.Location = new System.Drawing.Point(1159, 185);
+            this.removeAll.Name = "removeAll";
+            this.removeAll.Size = new System.Drawing.Size(119, 25);
+            this.removeAll.TabIndex = 16;
+            this.removeAll.Text = "Remove All";
+            this.removeAll.Click += new System.EventHandler(this.removeAll_Click);
+            // 
             // SVGCreation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1320, 729);
+            this.Controls.Add(this.removeAll);
             this.Controls.Add(this.labelControl);
             this.Controls.Add(this.urlButton);
             this.Controls.Add(this.removSeleButton);
@@ -218,6 +229,7 @@ namespace SVG_Template_Processor
         private DevExpress.XtraEditors.SimpleButton urlButton;
         private System.ComponentModel.BackgroundWorker bW;
         private DevExpress.XtraEditors.LabelControl labelControl;
+        private DevExpress.XtraEditors.SimpleButton removeAll;
 
 
         

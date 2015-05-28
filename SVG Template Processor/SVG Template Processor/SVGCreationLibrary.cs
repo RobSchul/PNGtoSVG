@@ -32,7 +32,7 @@ namespace SVG_Template_Processor
         {
             imageProcessingLibrary process = new imageProcessingLibrary(file);
             imageProcessingLibrary process2 = new imageProcessingLibrary(file);
-            Rectangle[] rect = process.getTRegions(); process2.Transparent2Color(); 
+            Rectangle[] rect = process.getTRegions();  
             return rect;
         }
 
@@ -54,8 +54,7 @@ namespace SVG_Template_Processor
                 {
                     linkedImage(pngFile.Path);//sent to the linked method 
                 }
-
-              });
+            });
         }
 
         
@@ -94,11 +93,17 @@ namespace SVG_Template_Processor
         private void embeddedImage(string pngFilePath, string pngFileName)
         {
             Bitmap myBitmap = new Bitmap(pngFilePath);//create bitmap of the image  
-            string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
-                    <svg version=""1.1"" id=""Layer_1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top half of svg
-           picEmbedd += @"<image overflow=""hidden""";
+            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top half of svg
             //where the unique ids will be put into the SVG
             Rectangle[] ids = getRegions(myBitmap);
+            for (int i = 0; i < ids.Length; i++ )
+            {
+                picEmbedd += "<rect id=\""+ i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill:transparent\"/>";
+               
+            }
+
+                picEmbedd += @"<image overflow=""hidden""";
+            
             picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
             string base64 = ImageToBase64(myBitmap);//change the image into base64 for the svg  
             picEmbedd += "" + base64 + "\" transform=\"matrix(0.24 0 0 0.24 0 0)\"></image> </svg>"; //end of the svg file
