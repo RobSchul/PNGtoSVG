@@ -67,7 +67,7 @@ namespace SVG_Template_Processor
         /// <returns></returns>
         private string ImageToBase64(Bitmap myBitmap)
         {   MemoryStream ms = new MemoryStream();//change the bitmap file into base64 for the svg file
-            myBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            myBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             byte[] byteImage = ms.ToArray();
             ms.Dispose();//cleaning 
             return Convert.ToBase64String(byteImage);//return the convert
@@ -93,20 +93,20 @@ namespace SVG_Template_Processor
         private void embeddedImage(string pngFilePath, string pngFileName)
         {
             Bitmap myBitmap = new Bitmap(pngFilePath);//create bitmap of the image  
-            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top half of svg
+            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""> <g transform=""matrix(0.24 0 0 0.24 0 0)"">"; //top half of svg
             //where the unique ids will be put into the SVG
             Rectangle[] ids = getRegions(myBitmap);
             for (int i = 0; i < ids.Length; i++ )
             {
-                picEmbedd += "<rect id=\""+ i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill:transparent\"/>";
-               
+                picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill:transparent\"/>";
+                //transparent
             }
 
                 picEmbedd += @"<image overflow=""hidden""";
             
             picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
             string base64 = ImageToBase64(myBitmap);//change the image into base64 for the svg  
-            picEmbedd += "" + base64 + "\" transform=\"matrix(0.24 0 0 0.24 0 0)\"></image> </svg>"; //end of the svg file
+            picEmbedd += "" + base64 + "\"><g></image> </svg>"; //end of the svg file
             save(picEmbedd, pngFileName);
             myBitmap.Dispose();//dispose of the image
             
@@ -137,7 +137,7 @@ namespace SVG_Template_Processor
             HttpWebRequest httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(link);
             HttpWebResponse httpWebReponse = (HttpWebResponse)httpWebRequest.GetResponse();
             Stream stream = httpWebReponse.GetResponseStream();
-            Image.FromStream(stream).Save("c:\\button.png", System.Drawing.Imaging.ImageFormat.Png);
+            //Image.FromStream(stream).Save("c:\\button.png", System.Drawing.Imaging.ImageFormat.Png);
 
 
         }
