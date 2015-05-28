@@ -108,7 +108,7 @@ namespace SVG_Template_Processor
 
             picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
             string base64 = ImageToBase64(myBitmap);//change the image into base64 for the svg  
-            picEmbedd += "" + base64 + "\"><g></image> </svg>"; //end of the svg file
+            picEmbedd += "" + base64 + "\"><g></image></svg>"; //end of the svg file
             save(picEmbedd, pngFileName);
             myBitmap.Dispose();//dispose of the image
 

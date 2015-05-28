@@ -103,63 +103,6 @@ namespace SVG_Template_Processor
             set { myBitmap = value; }
         }
 
-        public Bitmap Transparent2Color()
-        {
-            Color white = Color.White;
-
-            Rectangle[] rect = getTRegions();
-
-
-            SolidBrush blueBrush = new SolidBrush(Color.Yellow);
-
-            for (int i = 0, b = 0; i < rect.Length; i++, b++)
-            {
-                Rectangle r;
-                r = rect[i];
-                SolidBrush[] aColors = new SolidBrush[] { new SolidBrush(Color.Blue), new SolidBrush(Color.Red), new SolidBrush(Color.Black),
-                            new SolidBrush(Color.Brown),new SolidBrush(Color.Purple),new SolidBrush(Color.SeaGreen)};
-                Graphics g = Graphics.FromImage(myBitmap);
-                g.FillRectangle(aColors[b], r);
-                if (b == aColors.Length - 1)
-                    b = 0;
-                string text2 = "" + i;
-                Font font2 = new Font("Arial", 100, FontStyle.Bold, GraphicsUnit.Point);
-
-
-                TextFormatFlags flags = TextFormatFlags.WordBreak;
-                TextRenderer.DrawText(g, text2, font2, r, Color.White, flags);
-                g.Dispose();
-
-            }
-
-            /*for (int x = 0; x < myBitmap.Width; x++)
-                for (int y = 0; y < myBitmap.Height; y++)
-                {
-                    c = myBitmap.GetPixel(x, y);
-                    myBitmap.SetPixel(x, y, ((((short)(c.A)) & 0x00FF) <= 0) ? white : c); 
-                }
-             * 
-             * Rectangle r;
-                r = rect[i];
-                Graphics g = Graphics.FromImage(myBitmap);
-                System.Drawing.SolidBrush myBrush = aColors[1];
-                g.FillRectangle(myBrush, r);
-                string text2 = "" + i;
-                Font font2 = new Font("Arial", 60, FontStyle.Bold, GraphicsUnit.Point);
-                 TextFormatFlags flags = TextFormatFlags.WordBreak;
-                TextRenderer.DrawText(g, text2, font2, r, Color.Blue, flags);
-                if (b == aColors.Length - 2)
-                    b = 0;
-                g.Dispose(); myBrush.Dispose();
-             * 
-             * 
-        */
-            return myBitmap;
-
-        }
-
-
-
-
+      
     }
 }
