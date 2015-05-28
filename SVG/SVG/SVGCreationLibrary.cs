@@ -4,13 +4,15 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
 namespace SVG_Template_Processor
 {
-    class SVGCreationLibrary
+
+    public class SVGCreationLibrary
     {
         private string[] pngFilePaths;
         private string[] pngFileNames;
@@ -18,16 +20,18 @@ namespace SVG_Template_Processor
         private string outLocation = "";
         private string linkedImageURL = "";
         private string urlFinalImage = "";
-        public SVGCreationLibrary(string[] pngFileLocation, string sType, string locat, string[] pngFile)
+
+        public SVGCreationLibrary(string[] pngFileLocation, string locat, string[] pngFile, string stype)
         {   //creation of everything
             pngFilePaths = pngFileLocation;
-            type = sType;
             outLocation = locat;
             pngFileNames = pngFile;
+            type = stype;
         }
-        private Rectangle[] getRegions(string file)
+        private Rectangle[] getRegions(Bitmap file)
         {
             imageProcessingLibrary process = new imageProcessingLibrary(file);
+            imageProcessingLibrary process2 = new imageProcessingLibrary(file);
             Rectangle[] rect = process.getTRegions();
             return rect;
         }
@@ -37,22 +41,25 @@ namespace SVG_Template_Processor
         /// either embedded or linked image
         /// </summary>
         public void buildSVG()
-        {   var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
-
-        Parallel.ForEach(pathsAndName, pngFile =>
         {
-                
-                if (type.Equals("Embedded Image"))//change to be different 
+            var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
 
-                    embeddedImage(pngFile.Path);//send to the embedding method 
+            double amount = pngFilePaths.Length;
+
+            Parallel.ForEach(pathsAndName, pngFile =>
+            {
+
+                if (type.Equals("embed"))//change to be different 
+                    embeddedImage(pngFile.Path, pngFile.Name);//send to the embedding method 
                 else
                 {
                     linkedImage(pngFile.Path);//sent to the linked method 
                 }
-             });   
-         }   
+            });
+        }
 
-        
+
+
 
         /// <summary>
         /// change the bitmap file into a base64 string for the svg file
@@ -60,48 +67,68 @@ namespace SVG_Template_Processor
         /// <param name="myBitmap"></param>
         /// <returns></returns>
         private string ImageToBase64(Bitmap myBitmap)
-        {   MemoryStream ms = new MemoryStream();//change the bitmap file into base64 for the svg file
-            myBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+        {
+            MemoryStream ms = new MemoryStream();//change the bitmap file into base64 for the svg file
+            myBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             byte[] byteImage = ms.ToArray();
             ms.Dispose();//cleaning 
             return Convert.ToBase64String(byteImage);//return the convert
-         }    
-        
+        }
 
         /// <summary>
-        /// creation of the svg file with an embedded image 
+        /// Save the file into a certian location
         /// </summary>
-        private void embeddedImage(string pngFile)
+        /// <param name="picEmbedd">file to be saved</param>
+        /// <param name="pngFileName">location to be saved</param>
+        private void save(string picEmbedd, string pngFileName)
         {
-            Bitmap myBitmap = new Bitmap(pngFile);//create bitmap of the image  
-           string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
-                    <svg version=""1.1"" id=""Layer_1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""> <image overflow=""visible"""; //top half of svg
-            picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
-            string base64 = ImageToBase64(myBitmap);//change the image into base64 for the svg  
-            picEmbedd += "" + base64 + "\" transform=\"matrix(0.24 0 0 0.24 0 0)\"></image> </svg>"; //end of the svg file
-             //dispose of the image
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFile + ".svg")) //write the file to the certian location
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFileName + ".svg")) //write the file to the certian location
             {
                 file.Write(picEmbedd);//write to location  
                 file.Dispose();
             } //cleaning
-            myBitmap.Dispose();
-         }   
-        
+        }
+
+        /// <summary>
+        /// creation of the svg file with an embedded image 
+        /// </summary>
+        private void embeddedImage(string pngFilePath, string pngFileName)
+        {
+            Bitmap myBitmap = new Bitmap(pngFilePath);//create bitmap of the image  
+            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""> <g transform=""matrix(0.24 0 0 0.24 0 0)"">"; //top half of svg
+            //where the unique ids will be put into the SVG
+            Rectangle[] ids = getRegions(myBitmap);
+            for (int i = 0; i < ids.Length; i++)
+            {
+                picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill:transparent\"/>";
+                //transparent
+            }
+
+            picEmbedd += @"<image overflow=""hidden""";
+
+            picEmbedd += " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" + myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64,"; // embedd image into the svg file
+            string base64 = ImageToBase64(myBitmap);//change the image into base64 for the svg  
+            picEmbedd += "" + base64 + "\"><g></image> </svg>"; //end of the svg file
+            save(picEmbedd, pngFileName);
+            myBitmap.Dispose();//dispose of the image
+
+        }
+
 
         /// <summary>
         /// creation of the svg file with a linked image 
         /// </summary>
         private void linkedImage(string pngFile)
-        {   string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
+        {
+            string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
             <svg xmlns=""http://www.w3.org/2000/svg"" xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
-            picEmbedd += "<g>" + @"<image x=""1"" y=""1"" width=""469.999993"" height=""307"" id=""svg_1"" xlink:href=""";
+            picEmbedd += "<g>" + @"<image xlink:href=""";
             picEmbedd += pngFile;
-            picEmbedd +=" </g></svg>";
-            
-         }       
-            
-        
+            picEmbedd += " </g></svg>";
+
+        }
+
+
 
         /// <summary>
         /// get the image of what has been linked into the linked embedding
@@ -109,10 +136,13 @@ namespace SVG_Template_Processor
         /// <param name="link"> where you would get the image</param>
         private void getImage(string link)
         {
+            HttpWebRequest httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(link);
+            HttpWebResponse httpWebReponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            Stream stream = httpWebReponse.GetResponseStream();
+            //Image.FromStream(stream).Save("c:\\button.png", System.Drawing.Imaging.ImageFormat.Png);
+
 
         }
-
-
         public string LinkedImageURL
         {
             get { return linkedImageURL; }
