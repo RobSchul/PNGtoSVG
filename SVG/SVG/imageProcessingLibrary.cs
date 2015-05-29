@@ -14,12 +14,10 @@ namespace SVG_Template_Processor
     class imageProcessingLibrary
     {
         private Bitmap myBitmap;
-        private BitmapData bmData;
 
         public imageProcessingLibrary(Bitmap bits)
         {
             myBitmap = bits;
-            bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
 
         }
         /// <summary>
@@ -28,6 +26,7 @@ namespace SVG_Template_Processor
         /// </summary>
         public Rectangle[] getTRegions()
         {
+            BitmapData bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
             List<Point> Points = findTPoints(myBitmap, bmData);
             return mapTpoints(Points);
 
@@ -42,8 +41,8 @@ namespace SVG_Template_Processor
             while (points.Count > 0)
             {
                 Point pBase = points[0];
-                Rectangle baseR = new Rectangle(pBase, new Size(1, 1)); //create rectangle with first point of transparancy and size of 1,1 because one pixel
-                List<Point> RecPoints = (from P in points where P.X == baseR.X || P.Y == baseR.Y select P).ToList(); //list of points? creating the rectangle problem is here
+                Rectangle baseR = new Rectangle(pBase, new Size(1, 1)); //create rectangle with first point of transparancy and size of 1,1
+                List<Point> RecPoints = (from P in points where P.X == baseR.X || P.Y == baseR.Y select P).ToList(); //list of points?
                 foreach (Point point in RecPoints)
                 {
                     if (point.X == pBase.X && point.Y == (baseR.Y + baseR.Height) + 1)
@@ -105,9 +104,8 @@ namespace SVG_Template_Processor
         }
 
         // Find the polygon's centroid.
-        public PointF FindCentroid()
+        public PointF FindCentroid(List<Point> Points)
         {
-            List<Point> Points = findTPoints(myBitmap, bmData);
             // Add the first point at the end of the array.
             int num_points = Points.Count;
             List<Point> pts = new List<Point>(Points);
@@ -154,8 +152,8 @@ namespace SVG_Template_Processor
             int num_points = Points.Count;
             List<Point> pts = new List<Point>(Points);
             pts[num_points] = Points[0];
-            
-            
+
+
             // Get the areas.
             float area = 0;
             for (int i = 0; i < num_points; i++)
@@ -169,4 +167,4 @@ namespace SVG_Template_Processor
             return area;
         }
     }
-  }
+}

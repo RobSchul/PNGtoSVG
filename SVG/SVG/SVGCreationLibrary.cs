@@ -11,7 +11,7 @@ namespace SVG_Template_Processor
         private string outLocation = "";
         private string linkedImageURL = "";
         private string urlFinalImage = "";
-        
+
 
         public SVGCreationLibrary(string[] pngFileLocation, string locat, string[] pngFile, string stype)
         {   //creation of everything
@@ -24,7 +24,7 @@ namespace SVG_Template_Processor
         {
             imageProcessingLibrary process = new imageProcessingLibrary(file);
             imageProcessingLibrary process2 = new imageProcessingLibrary(file);
-            System.Drawing.Rectangle[] rect = process.getTRegions(); 
+            System.Drawing.Rectangle[] rect = process.getTRegions();
             return rect;
         }
 
@@ -37,7 +37,7 @@ namespace SVG_Template_Processor
             var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
 
             double amount = pngFilePaths.Length;
-           
+
             System.Threading.Tasks.Parallel.ForEach(pathsAndName, pngFile =>
             {
 
@@ -93,7 +93,7 @@ namespace SVG_Template_Processor
             for (int i = 0; i < ids.Length; i++)
             {
                 picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill:transparent\"/>";
-                
+
             }
             string base64 = ImageToBase64(myBitmap);//change the image into base64 for the svg  
             picEmbedd += @"<image overflow=""hidden""" + " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" +
