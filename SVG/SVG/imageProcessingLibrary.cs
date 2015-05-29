@@ -14,10 +14,12 @@ namespace SVG_Template_Processor
     class imageProcessingLibrary
     {
         private Bitmap myBitmap;
+        private BitmapData bmData;
 
         public imageProcessingLibrary(Bitmap bits)
         {
             myBitmap = bits;
+            bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
 
         }
         /// <summary>
@@ -26,7 +28,6 @@ namespace SVG_Template_Processor
         /// </summary>
         public Rectangle[] getTRegions()
         {
-            BitmapData bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
             List<Point> Points = findTPoints(myBitmap, bmData);
             return mapTpoints(Points);
 
@@ -42,7 +43,7 @@ namespace SVG_Template_Processor
             {
                 Point pBase = points[0];
                 Rectangle baseR = new Rectangle(pBase, new Size(1, 1)); //create rectangle with first point of transparancy and size of 1,1 because one pixel
-                List<Point> RecPoints = (from P in points where P.X == baseR.X || P.Y == baseR.Y select P).ToList(); //list of points?
+                List<Point> RecPoints = (from P in points where P.X == baseR.X || P.Y == baseR.Y select P).ToList(); //list of points? creating the rectangle problem is here
                 foreach (Point point in RecPoints)
                 {
                     if (point.X == pBase.X && point.Y == (baseR.Y + baseR.Height) + 1)
@@ -103,6 +104,69 @@ namespace SVG_Template_Processor
             set { myBitmap = value; }
         }
 
-      
+        // Find the polygon's centroid.
+        public PointF FindCentroid()
+        {
+            List<Point> Points = findTPoints(myBitmap, bmData);
+            // Add the first point at the end of the array.
+            int num_points = Points.Count;
+            List<Point> pts = new List<Point>(Points);
+            pts[num_points] = Points[0];
+
+            // Find the centroid.
+            float X = 0;
+            float Y = 0;
+            float second_factor;
+            for (int i = 0; i < num_points; i++)
+            {
+                second_factor =
+                    pts[i].X * pts[i + 1].Y -
+                    pts[i + 1].X * pts[i].Y;
+                X += (pts[i].X + pts[i + 1].X) * second_factor;
+                Y += (pts[i].Y + pts[i + 1].Y) * second_factor;
+            }
+
+            // Divide by 6 times the polygon's area.
+            float polygon_area = PolygonArea(Points);
+            X /= (6 * polygon_area);
+            Y /= (6 * polygon_area);
+
+            // If the values are negative, the polygon is
+            // oriented counterclockwise so reverse the signs.
+            if (X < 0)
+            {
+                X = -X;
+                Y = -Y;
+            }
+
+            return new PointF(X, Y);
+        }
+
+        public float PolygonArea(List<Point> Points)
+        {
+            // Return the absolute value of the signed area.
+            // The signed area is negative if the polyogn is
+            // oriented clockwise.
+            return Math.Abs(SignedPolygonArea(Points));
+        }
+        private float SignedPolygonArea(List<Point> Points)
+        {
+            int num_points = Points.Count;
+            List<Point> pts = new List<Point>(Points);
+            pts[num_points] = Points[0];
+            
+            
+            // Get the areas.
+            float area = 0;
+            for (int i = 0; i < num_points; i++)
+            {
+                area +=
+                    (pts[i + 1].X - pts[i].X) *
+                    (pts[i + 1].Y + pts[i].Y) / 2;
+            }
+
+            // Return the result.
+            return area;
+        }
     }
-}
+  }

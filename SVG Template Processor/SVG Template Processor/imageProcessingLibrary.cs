@@ -41,7 +41,7 @@ namespace SVG_Template_Processor
             while (points.Count > 0)
             {
                 Point pBase = points[0];
-                Rectangle baseR = new Rectangle(pBase, new Size(1, 1)); //create rectangle with first point of transparancy and size of 1,1 because one pixel
+                Rectangle baseR = new Rectangle(pBase, new Size(1, 1)); //create rectangle with first point of transparancy and size of 1,1
                 List<Point> RecPoints = (from P in points where P.X == baseR.X || P.Y == baseR.Y select P).ToList(); //list of points?
                 foreach (Point point in RecPoints)
                 {
@@ -49,7 +49,7 @@ namespace SVG_Template_Processor
                         baseR.Height++;
                     if (point.Y == pBase.Y && point.X == (baseR.X + baseR.Width) + 1)
                         baseR.Width++;
-                }
+                 }
                 points.RemoveAll(P => baseR.Contains(P));// problem in this area
                 if (baseR.Width > 1 && baseR.Height > 1)
                     ret.Add(baseR);
@@ -103,5 +103,68 @@ namespace SVG_Template_Processor
             set { myBitmap = value; }
         }
 
+        // Find the polygon's centroid.
+        public PointF FindCentroid(List<Point> Points)
+        {
+            // Add the first point at the end of the array.
+            int num_points = Points.Count;
+            List<Point> pts = new List<Point>(Points);
+            pts[num_points] = Points[0];
+
+            // Find the centroid.
+            float X = 0;
+            float Y = 0;
+            float second_factor;
+            for (int i = 0; i < num_points; i++)
+            {
+                second_factor =
+                    pts[i].X * pts[i + 1].Y -
+                    pts[i + 1].X * pts[i].Y;
+                X += (pts[i].X + pts[i + 1].X) * second_factor;
+                Y += (pts[i].Y + pts[i + 1].Y) * second_factor;
+            }
+
+            // Divide by 6 times the polygon's area.
+            float polygon_area = PolygonArea(Points);
+            X /= (6 * polygon_area);
+            Y /= (6 * polygon_area);
+
+            // If the values are negative, the polygon is
+            // oriented counterclockwise so reverse the signs.
+            if (X < 0)
+            {
+                X = -X;
+                Y = -Y;
+            }
+
+            return new PointF(X, Y);
+        }
+
+        public float PolygonArea(List<Point> Points)
+        {
+            // Return the absolute value of the signed area.
+            // The signed area is negative if the polyogn is
+            // oriented clockwise.
+            return Math.Abs(SignedPolygonArea(Points));
+        }
+        private float SignedPolygonArea(List<Point> Points)
+        {
+            int num_points = Points.Count;
+            List<Point> pts = new List<Point>(Points);
+            pts[num_points] = Points[0];
+            
+            
+            // Get the areas.
+            float area = 0;
+            for (int i = 0; i < num_points; i++)
+            {
+                area +=
+                    (pts[i + 1].X - pts[i].X) *
+                    (pts[i + 1].Y + pts[i].Y) / 2;
+            }
+
+            // Return the result.
+            return area;
+        }
     }
 }

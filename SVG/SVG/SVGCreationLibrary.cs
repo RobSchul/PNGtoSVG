@@ -1,14 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-
 namespace SVG_Template_Processor
 {
 
@@ -20,6 +11,7 @@ namespace SVG_Template_Processor
         private string outLocation = "";
         private string linkedImageURL = "";
         private string urlFinalImage = "";
+        
 
         public SVGCreationLibrary(string[] pngFileLocation, string locat, string[] pngFile, string stype)
         {   //creation of everything
@@ -28,11 +20,11 @@ namespace SVG_Template_Processor
             pngFileNames = pngFile;
             type = stype;
         }
-        private Rectangle[] getRegions(Bitmap file)
+        private System.Drawing.Rectangle[] getRegions(System.Drawing.Bitmap file)
         {
             imageProcessingLibrary process = new imageProcessingLibrary(file);
             imageProcessingLibrary process2 = new imageProcessingLibrary(file);
-            Rectangle[] rect = process.getTRegions();
+            System.Drawing.Rectangle[] rect = process.getTRegions(); 
             return rect;
         }
 
@@ -45,8 +37,8 @@ namespace SVG_Template_Processor
             var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
 
             double amount = pngFilePaths.Length;
-
-            Parallel.ForEach(pathsAndName, pngFile =>
+           
+            System.Threading.Tasks.Parallel.ForEach(pathsAndName, pngFile =>
             {
 
                 if (type.Equals("embed"))//change to be different 
@@ -66,9 +58,9 @@ namespace SVG_Template_Processor
         /// </summary>
         /// <param name="myBitmap"></param>
         /// <returns></returns>
-        private string ImageToBase64(Bitmap myBitmap)
+        private string ImageToBase64(System.Drawing.Bitmap myBitmap)
         {
-            MemoryStream ms = new MemoryStream();//change the bitmap file into base64 for the svg file
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();//change the bitmap file into base64 for the svg file
             myBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             byte[] byteImage = ms.ToArray();
             ms.Dispose();//cleaning 
@@ -94,10 +86,10 @@ namespace SVG_Template_Processor
         /// </summary>
         private void embeddedImage(string pngFilePath, string pngFileName)
         {
-            Bitmap myBitmap = new Bitmap(pngFilePath);//create bitmap of the image  
-            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""> <g transform=""matrix(0.24 0 0 0.24 0 0)"">"; //top half of svg
+            System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(pngFilePath);//create bitmap of the image  
+            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""> <g transform=""matrix(1 0 0 1 0 0)"">"; //top half of svg
             //where the unique ids will be put into the SVG
-            Rectangle[] ids = getRegions(myBitmap);
+            System.Drawing.Rectangle[] ids = getRegions(myBitmap);
             for (int i = 0; i < ids.Length; i++)
             {
                 picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill:transparent\"/>";
@@ -134,9 +126,9 @@ namespace SVG_Template_Processor
         /// <param name="link"> where you would get the image</param>
         private void getImage(string link)
         {
-            HttpWebRequest httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(link);
-            HttpWebResponse httpWebReponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            Stream stream = httpWebReponse.GetResponseStream();
+            System.Net.HttpWebRequest httpWebRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(link);
+            System.Net.HttpWebResponse httpWebReponse = (System.Net.HttpWebResponse)httpWebRequest.GetResponse();
+            System.IO.Stream stream = httpWebReponse.GetResponseStream();
             //Image.FromStream(stream).Save("c:\\button.png", System.Drawing.Imaging.ImageFormat.Png);
 
 
