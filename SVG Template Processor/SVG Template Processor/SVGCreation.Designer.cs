@@ -170,7 +170,7 @@ namespace SVG_Template_Processor
             // 
             // removeAll
             // 
-            this.removeAll.Location = new System.Drawing.Point(1159, 185);
+            this.removeAll.Location = new System.Drawing.Point(1009, 232);
             this.removeAll.Name = "removeAll";
             this.removeAll.Size = new System.Drawing.Size(119, 25);
             this.removeAll.TabIndex = 16;
