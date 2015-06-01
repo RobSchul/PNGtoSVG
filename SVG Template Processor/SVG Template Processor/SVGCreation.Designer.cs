@@ -35,7 +35,7 @@ namespace SVG_Template_Processor
             this.sourceFiles = new DevExpress.XtraEditors.ListBoxControl();
             this.ftbEmbedded = new System.Windows.Forms.OpenFileDialog();
             this.outputfilepath = new DevExpress.XtraEditors.TextEdit();
-            this.overlayImage = new DevExpress.XtraEditors.TextEdit();
+            this.URLlink = new DevExpress.XtraEditors.TextEdit();
             this.removSeleButton = new DevExpress.XtraEditors.SimpleButton();
             this.validation = new DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider(this.components);
             this.urlButton = new DevExpress.XtraEditors.SimpleButton();
@@ -44,7 +44,7 @@ namespace SVG_Template_Processor
             this.removeAll = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputfilepath.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.overlayImage.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.URLlink.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.validation)).BeginInit();
             this.SuspendLayout();
             // 
@@ -122,13 +122,13 @@ namespace SVG_Template_Processor
             conditionValidationRule1.Value1 = "Please Enter Your Name";
             this.validation.SetValidationRule(this.outputfilepath, conditionValidationRule1);
             // 
-            // overlayImage
+            // URLlink
             // 
-            this.overlayImage.Location = new System.Drawing.Point(445, 368);
-            this.overlayImage.Name = "overlayImage";
-            this.overlayImage.Size = new System.Drawing.Size(530, 20);
-            this.overlayImage.TabIndex = 12;
-            this.overlayImage.ToolTip = "File Path to the file that will be embedded into the SVG";
+            this.URLlink.Location = new System.Drawing.Point(445, 368);
+            this.URLlink.Name = "URLlink";
+            this.URLlink.Size = new System.Drawing.Size(530, 20);
+            this.URLlink.TabIndex = 12;
+            this.URLlink.ToolTip = "File Path to the file that will be embedded into the SVG";
             // 
             // removSeleButton
             // 
@@ -187,7 +187,7 @@ namespace SVG_Template_Processor
             this.Controls.Add(this.labelControl);
             this.Controls.Add(this.urlButton);
             this.Controls.Add(this.removSeleButton);
-            this.Controls.Add(this.overlayImage);
+            this.Controls.Add(this.URLlink);
             this.Controls.Add(this.outputfilepath);
             this.Controls.Add(this.sourceFiles);
             this.Controls.Add(this.svgConvertB);
@@ -202,7 +202,7 @@ namespace SVG_Template_Processor
             this.Load += new System.EventHandler(this.Form2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputfilepath.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.overlayImage.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.URLlink.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.validation)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -222,7 +222,7 @@ namespace SVG_Template_Processor
         private DevExpress.XtraEditors.SimpleButton svgConvertB;
         private DevExpress.XtraEditors.ListBoxControl sourceFiles;
         private DevExpress.XtraEditors.TextEdit outputfilepath;
-        private DevExpress.XtraEditors.TextEdit overlayImage;
+        private DevExpress.XtraEditors.TextEdit URLlink;
         private System.Windows.Forms.OpenFileDialog ftbEmbedded;
         private DevExpress.XtraEditors.SimpleButton removSeleButton;
         private DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider validation;

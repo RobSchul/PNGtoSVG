@@ -7,7 +7,8 @@ using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
-
+using System.ComponentModel;
+using System.Data;
 
 namespace SVG_Template_Processor
 {
@@ -28,8 +29,11 @@ namespace SVG_Template_Processor
         {
             BitmapData bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
             List<Point> Points = findTPoints(myBitmap, bmData);
-            return mapTpoints(Points);
+            Points = MakeConvexHull(Points);
+            
 
+            //return mapTpoints(Points); 
+            return GetMinMaxBox(Points);
         }
         /// <summary>
         ///  map out the points for the rectangle holes 
@@ -50,7 +54,7 @@ namespace SVG_Template_Processor
                     if (point.Y == pBase.Y && point.X == (baseR.X + baseR.Width) + 1)
                         baseR.Width++;
                  }
-                points.RemoveAll(P => baseR.Contains(P));// problem in this area
+               points.RemoveAll(P => baseR.Contains(P));// problem in this area
                 if (baseR.Width > 1 && baseR.Height > 1)
                     ret.Add(baseR);
 
@@ -97,74 +101,189 @@ namespace SVG_Template_Processor
 
         }
 
-        public Bitmap MyBitmap
-        {
-            get { return myBitmap; }
-            set { myBitmap = value; }
-        }
-
-        // Find the polygon's centroid.
-        public PointF FindCentroid(List<Point> Points)
-        {
-            // Add the first point at the end of the array.
-            int num_points = Points.Count;
-            List<Point> pts = new List<Point>(Points);
-            pts[num_points] = Points[0];
-
-            // Find the centroid.
-            float X = 0;
-            float Y = 0;
-            float second_factor;
-            for (int i = 0; i < num_points; i++)
-            {
-                second_factor =
-                    pts[i].X * pts[i + 1].Y -
-                    pts[i + 1].X * pts[i].Y;
-                X += (pts[i].X + pts[i + 1].X) * second_factor;
-                Y += (pts[i].Y + pts[i + 1].Y) * second_factor;
-            }
-
-            // Divide by 6 times the polygon's area.
-            float polygon_area = PolygonArea(Points);
-            X /= (6 * polygon_area);
-            Y /= (6 * polygon_area);
-
-            // If the values are negative, the polygon is
-            // oriented counterclockwise so reverse the signs.
-            if (X < 0)
-            {
-                X = -X;
-                Y = -Y;
-            }
-
-            return new PointF(X, Y);
-        }
-
-        public float PolygonArea(List<Point> Points)
-        {
-            // Return the absolute value of the signed area.
-            // The signed area is negative if the polyogn is
-            // oriented clockwise.
-            return Math.Abs(SignedPolygonArea(Points));
-        }
-        private float SignedPolygonArea(List<Point> Points)
-        {
-            int num_points = Points.Count;
-            List<Point> pts = new List<Point>(Points);
-            pts[num_points] = Points[0];
             
-            
-            // Get the areas.
-            float area = 0;
-            for (int i = 0; i < num_points; i++)
-            {
-                area +=
-                    (pts[i + 1].X - pts[i].X) *
-                    (pts[i + 1].Y + pts[i].Y) / 2;
+           
+            // Find the points nearest the upper left, upper right,
+            // lower left, and lower right corners.
+            private static void GetMinMaxCorners(List<Point> points, ref Point upperL, ref Point upperR, ref Point lowerL, ref Point lowerR)
+            {  //Start with the first point
+                upperL = upperR = lowerL = lowerR = points[0];
+                
+                //Search the other points.
+                foreach (Point point in points)
+                {
+                    if (-point.X - point.Y > -upperL.X - upperL.Y) upperL = point;
+                    if (point.X - point.Y > upperR.X - upperR.Y) upperR = point;
+                    if (-point.X + point.Y > -lowerL.X + lowerL.Y) lowerL = point;
+                    if (point.X + point.Y > lowerR.X + lowerR.Y) lowerR = point;
+                }
             }
 
-            // Return the result.
-            return area;
-        }
+            // Find a box that fits inside the MinMax quadrilateral.
+            private static Rectangle[] GetMinMaxBox(List<Point> points)
+            {
+                // Find the MinMax quadrilateral.
+                Point upperL = new Point(0, 0), upperR = upperL, lowerL = upperL, lowerR = upperL;
+                GetMinMaxCorners(points, ref upperL, ref upperR, ref lowerL, ref lowerR);
+
+                // Get the coordinates of a box that lies inside this quadrilateral.
+                int xmin, xmax, ymin, ymax;
+                xmin = upperL.X;
+                ymin = upperL.Y;
+
+                xmax = upperR.X;
+                if (ymin < upperR.Y) ymin = upperR.Y;
+
+                if (xmax > lowerR.X) xmax = lowerR.X;
+                ymax = lowerR.Y;
+
+                if (xmin < lowerL.X) xmin = lowerL.X;
+                if (ymax > lowerL.Y) ymax = lowerL.Y;
+
+                Rectangle[] result = new Rectangle[] {new Rectangle(xmin, ymin, xmax - xmin, ymax - ymin)};
+                return result;
+            }
+
+            // Cull points out of the convex hull that lie inside the
+            // trapezoid defined by the vertices with smallest and
+            // largest X and Y coordinates.
+            // Return the points that are not culled.
+            private static List<Point> HullCull(List<Point> points)
+            {
+                // Find a culling box.
+                Rectangle[] culling_box = GetMinMaxBox(points);
+
+                // Cull the points.
+                List<Point> results = new List<Point>();
+                foreach (Point pt in points)
+                {
+                    // See if (this point lies outside of the culling box.
+                    if (pt.X <= culling_box[0].Left ||
+                        pt.X >= culling_box[0].Right ||
+                        pt.Y <= culling_box[0].Top ||
+                        pt.Y >= culling_box[0].Bottom)
+                    {
+                        // This point cannot be culled.
+                        // Add it to the results.
+                        results.Add(pt);
+                    }
+                }
+                return results;
+            }
+
+            // Return the points that make up a polygon's convex hull.
+            // This method leaves the points list unchanged.
+            public static List<Point> MakeConvexHull(List<Point> points)
+            {
+                // Cull.
+                points = HullCull(points);
+
+                // Find the remaining point with the smallest Y value.
+                // if (there's a tie, take the one with the smaller X value.
+                Point best_pt = points[0];
+                foreach (Point pt in points)
+                {
+                    if ((pt.Y < best_pt.Y) ||
+                       ((pt.Y == best_pt.Y) && (pt.X < best_pt.X)))
+                    {
+                        best_pt = pt;
+                    }
+                }
+
+                // Move this point to the convex hull.
+                List<Point> hull = new List<Point>();
+                hull.Add(best_pt);
+                points.Remove(best_pt);
+
+                // Start wrapping up the other points.
+                float sweep_angle = 0;
+                for (; ; )
+                {
+                    // Find the point with smallest AngleValue
+                    // from the last point.
+                    int X = hull[hull.Count - 1].X;
+                    int Y = hull[hull.Count - 1].Y;
+                    best_pt = points[0];
+                    float best_angle = 3600;
+
+                    // Search the rest of the points.
+                    foreach (Point pt in points)
+                    {
+                        float test_angle = AngleValue(X, Y, pt.X, pt.Y);
+                        if ((test_angle >= sweep_angle) &&
+                            (best_angle > test_angle))
+                        {
+                            best_angle = test_angle;
+                            best_pt = pt;
+                        }
+                    }
+
+                    // See if the first point is better.
+                    // If so, we are done.
+                    float first_angle = AngleValue(X, Y, hull[0].X, hull[0].Y);
+                    if ((first_angle >= sweep_angle) &&
+                        (best_angle >= first_angle))
+                    {
+                        // The first point is better. We're done.
+                        break;
+                    }
+
+                    // Add the best point to the convex hull.
+                    hull.Add(best_pt);
+                    points.Remove(best_pt);
+
+                    sweep_angle = best_angle;
+
+                    // If all of the points are on the hull, we're done.
+                    if (points.Count == 0) break;
+                }
+
+                return hull;
+            }
+
+            // Return a number that gives the ordering of angles
+            // WRST horizontal from the point (x1, y1) to (x2, y2).
+            // In other words, AngleValue(x1, y1, x2, y2) is not
+            // the angle, but if:
+            //   Angle(x1, y1, x2, y2) > Angle(x1, y1, x2, y2)
+            // then
+            //   AngleValue(x1, y1, x2, y2) > AngleValue(x1, y1, x2, y2)
+            // this angle is greater than the angle for another set
+            // of points,) this number for
+            //
+            // This function is dy / (dy + dx).
+            private static float AngleValue(int x1, int y1, int x2, int y2)
+            {
+                float dx, dy, ax, ay, t;
+
+                dx = x2 - x1;
+                ax = Math.Abs(dx);
+                dy = y2 - y1;
+                ay = Math.Abs(dy);
+                if (ax + ay == 0)
+                {
+                    // if (the two points are the same, return 360.
+                    t = 360f / 9f;
+                }
+                else
+                {
+                    t = dy / (ax + ay);
+                }
+                if (dx < 0)
+                {
+                    t = 2 - t;
+                }
+                else if (dy < 0)
+                {
+                    t = 4 + t;
+                }
+                return t * 90;
+            }
+
+            public Bitmap MyBitmap
+            {
+                get { return myBitmap; }
+                set { myBitmap = value; }
+            }
     }
 }

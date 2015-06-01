@@ -122,27 +122,39 @@ namespace SVG_Template_Processor
 
         private void urlButton_Click(object sender, EventArgs e)
         {
-            validation.Validate();
-            if (validation.GetInvalidControls().Count != 0)
-                return;
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            if (pngFileNames.Count > 0)
+            try
             {
-                SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), "linked");
-                create.buildSVG();
+                validation.Validate();
+                if (validation.GetInvalidControls().Count != 0)
+                    return;
+                this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                sourceFiles.Items.Add(URLlink.Text);
+                pngFilePaths.Add(URLlink.Text);
+                pngFileNames.Add(URLlink.Text);
             }
-        }
+            catch(Exception a)
+            {
+                a = null;
+            }
+         }
 
         private void bW_DoWork(object sender, DoWorkEventArgs e)
         {
-            validation.Validate();
-            if (validation.GetInvalidControls().Count != 0)
-                return;
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            if (pngFileNames.Count > 0)
+            try
             {
-                SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), "embed");
-                create.buildSVG();
+                validation.Validate();
+                if (validation.GetInvalidControls().Count != 0)
+                    return;
+                this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                if (pngFileNames.Count > 0)
+                {
+                    SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray());
+                    create.buildSVG();
+                }
+            }
+            catch(Exception a)
+            {
+                a = null;
             }
         }
 
