@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 namespace SVG_Template_Processor
 {
@@ -24,7 +25,7 @@ namespace SVG_Template_Processor
         {
             imageProcessingLibrary process = new imageProcessingLibrary(file);
             imageProcessingLibrary process2 = new imageProcessingLibrary(file);
-            System.Drawing.Rectangle[] rect = process.getTRegions();
+            System.Drawing.Rectangle[] rect = {new Rectangle(1,1,1,1) }; // = process.getTRegions();
             return rect;
         }
 
@@ -79,13 +80,16 @@ namespace SVG_Template_Processor
             } //cleaning
         }
 
+        
+
         /// <summary>
         /// creation of the svg file with an embedded image 
         /// </summary>
         private void embeddedImage(string pngFilePath, string pngFileName)
         {
             System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(pngFilePath);//create bitmap of the image  
-            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""><g transform=""matrix(.2 0 0 .2 0 0)"">"; //top half of svg
+            double num = autoSize(myBitmap);
+            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""><g transform=""matrix("+ num + " 0 0 "+ num +" 0 0)\">"; //top half of svg
             //where the unique ids will be put into the SVG
             System.Drawing.Rectangle[] ids = getRegions(myBitmap);
             for (int i = 0; i < ids.Length; i++)
@@ -130,6 +134,31 @@ namespace SVG_Template_Processor
             //Image.FromStream(stream).Save("c:\\button.png", System.Drawing.Imaging.ImageFormat.Png);
 
 
+        }
+
+        private double autoSize(Bitmap myBitmap)
+        {
+            double dpiX = myBitmap.Height / myBitmap.VerticalResolution;
+            double dpiY = myBitmap.Width / myBitmap.HorizontalResolution;
+            double num = 0;
+            if (dpiY != dpiX && dpiX < dpiY)
+                num = (dpiX + dpiY) / (myBitmap.Height + myBitmap.Width);
+            else if (dpiY == dpiX && myBitmap.Width == myBitmap.Height)
+                num = (dpiX + dpiY) / (myBitmap.Height + myBitmap.Width);
+            else
+            {
+                num = (dpiX / myBitmap.Width) / (dpiY / myBitmap.Height);
+                if (num >= 1)
+                {
+                    num = .17;
+                }
+            }
+
+            while (num < .1)
+            {
+                num *= 10;
+            }
+            return num = Math.Floor(num * 100) / 100;
         }
         public string LinkedImageURL
         {

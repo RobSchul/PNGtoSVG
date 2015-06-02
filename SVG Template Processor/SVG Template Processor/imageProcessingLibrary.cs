@@ -70,10 +70,8 @@ namespace SVG_Template_Processor
             int stopX = startX + myBitmap.Width;
             int stopY = startY + myBitmap.Height;
             int offset = bmData.Stride - myBitmap.Width * pixelSize;
-            List<Point> Points = new List<Point>();
-
-
-            byte* point = (byte*)bmData.Scan0;
+            List<Point> Points = new List<Point>(); 
+             byte* point = (byte*)bmData.Scan0;
             //point to the first pixel 
             point += (startY * bmData.Stride + startX);
             //search through the picture finding all transparent points and adding them to a points list
@@ -85,7 +83,7 @@ namespace SVG_Template_Processor
                         switch (p)
                         {
                             case 3:
-                                if (*point < 255)
+                                if (*point == 0)
                                     Points.Add(new Point(x, y));
 
                                 break;
@@ -95,14 +93,10 @@ namespace SVG_Template_Processor
             }
 
             myBitmap.UnlockBits(bmData);
-            //myBitmap.Dispose();
             myBitmap = null;
             return Points;
 
         }
-
-            
-           
             // Find the points nearest the upper left, upper right,
             // lower left, and lower right corners.
             private static void GetMinMaxCorners(List<Point> points, ref Point upperL, ref Point upperR, ref Point lowerL, ref Point lowerR)
@@ -155,17 +149,17 @@ namespace SVG_Template_Processor
 
                 // Cull the points.
                 List<Point> results = new List<Point>();
-                foreach (Point pt in points)
+                foreach (Point point in points)
                 {
                     // See if (this point lies outside of the culling box.
-                    if (pt.X <= culling_box[0].Left ||
-                        pt.X >= culling_box[0].Right ||
-                        pt.Y <= culling_box[0].Top ||
-                        pt.Y >= culling_box[0].Bottom)
+                    if (point.X <= culling_box[0].Left ||
+                        point.X >= culling_box[0].Right ||
+                        point.Y <= culling_box[0].Top ||
+                        point.Y >= culling_box[0].Bottom)
                     {
                         // This point cannot be culled.
                         // Add it to the results.
-                        results.Add(pt);
+                        results.Add(point);
                     }
                 }
                 return results;
@@ -180,30 +174,29 @@ namespace SVG_Template_Processor
 
                 // Find the remaining point with the smallest Y value.
                 // if (there's a tie, take the one with the smaller X value.
-                Point best_pt = points[0];
-                foreach (Point pt in points)
+                Point bestPoint = points[0];
+                foreach (Point point in points)
                 {
-                    if ((pt.Y < best_pt.Y) ||
-                       ((pt.Y == best_pt.Y) && (pt.X < best_pt.X)))
+                    if ((point.Y < bestPoint.Y) ||
+                       ((point.Y == bestPoint.Y) && (point.X < bestPoint.X)))
                     {
-                        best_pt = pt;
+                        bestPoint = point;
                     }
                 }
 
                 // Move this point to the convex hull.
                 List<Point> hull = new List<Point>();
-                hull.Add(best_pt);
-                points.Remove(best_pt);
+                hull.Add(bestPoint);
+                points.Remove(bestPoint);
 
                 // Start wrapping up the other points.
                 float sweep_angle = 0;
-                for (; ; )
-                {
-                    // Find the point with smallest AngleValue
+                for (;;)
+                {   // Find the point with smallest AngleValue
                     // from the last point.
                     int X = hull[hull.Count - 1].X;
                     int Y = hull[hull.Count - 1].Y;
-                    best_pt = points[0];
+                    bestPoint = points[0];
                     float best_angle = 3600;
 
                     // Search the rest of the points.
@@ -214,7 +207,7 @@ namespace SVG_Template_Processor
                             (best_angle > test_angle))
                         {
                             best_angle = test_angle;
-                            best_pt = pt;
+                            bestPoint = pt;
                         }
                     }
 
@@ -229,8 +222,8 @@ namespace SVG_Template_Processor
                     }
 
                     // Add the best point to the convex hull.
-                    hull.Add(best_pt);
-                    points.Remove(best_pt);
+                    hull.Add(bestPoint);
+                    points.Remove(bestPoint);
 
                     sweep_angle = best_angle;
 
