@@ -30,8 +30,6 @@ namespace SVG_Template_Processor
             BitmapData bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
             List<Point> Points = findTPoints(myBitmap, bmData);
             Points = MakeConvexHull(Points);
-            
-
             //return mapTpoints(Points); 
             return GetMinMaxBox(Points);
         }
@@ -93,23 +91,27 @@ namespace SVG_Template_Processor
             }
 
             myBitmap.UnlockBits(bmData);
-            myBitmap = null;
             return Points;
 
         }
             // Find the points nearest the upper left, upper right,
             // lower left, and lower right corners.
-            private static void GetMinMaxCorners(List<Point> points, ref Point upperL, ref Point upperR, ref Point lowerL, ref Point lowerR)
+            private static void GetMinMaxCorners(List<Point> points, ref Point upperMostPoint, ref Point lowerMostPoint, ref Point leftMost, ref Point rightMost)
             {  //Start with the first point
-                upperL = upperR = lowerL = lowerR = points[0];
+                upperMostPoint = lowerMostPoint = leftMost = rightMost = points[0];
+                
                 
                 //Search the other points.
                 foreach (Point point in points)
                 {
-                    if (-point.X - point.Y > -upperL.X - upperL.Y) upperL = point;
-                    if (point.X - point.Y > upperR.X - upperR.Y) upperR = point;
-                    if (-point.X + point.Y > -lowerL.X + lowerL.Y) lowerL = point;
-                    if (point.X + point.Y > lowerR.X + lowerR.Y) lowerR = point;
+                    if (point.Y > lowerMostPoint.Y)
+                        lowerMostPoint.Y = point.Y;
+                    if (point.Y < upperMostPoint.Y)
+                        upperMostPoint.Y = point.Y;
+                    if (point.X < leftMost.X)
+                        leftMost.X = point.X;
+                    if (point.X > rightMost.X)
+                        rightMost.X = point.X;
                 }
             }
 
@@ -117,26 +119,14 @@ namespace SVG_Template_Processor
             private static Rectangle[] GetMinMaxBox(List<Point> points)
             {
                 // Find the MinMax quadrilateral.
-                Point upperL = new Point(0, 0), upperR = upperL, lowerL = upperL, lowerR = upperL;
-                GetMinMaxCorners(points, ref upperL, ref upperR, ref lowerL, ref lowerR);
+                Point lowerMost = new Point(0, 0),  leftMost = lowerMost, rightMost = lowerMost, upperMost = lowerMost;
+                GetMinMaxCorners(points,ref upperMost , ref lowerMost, ref leftMost, ref rightMost);
 
-                // Get the coordinates of a box that lies inside this quadrilateral.
-                int xmin, xmax, ymin, ymax;
-                xmin = upperL.X;
-                ymin = upperL.Y;
 
-                xmax = upperR.X;
-                if (ymin < upperR.Y) ymin = upperR.Y;
-
-                if (xmax > lowerR.X) xmax = lowerR.X;
-                ymax = lowerR.Y;
-
-                if (xmin < lowerL.X) xmin = lowerL.X;
-                if (ymax > lowerL.Y) ymax = lowerL.Y;
-
-                Rectangle[] result = new Rectangle[] {new Rectangle(xmin, ymin, xmax - xmin, ymax - ymin)};
+                Rectangle[] result = new Rectangle[] { new Rectangle(leftMost.X, upperMost.Y, rightMost.X - leftMost.X, lowerMost.Y - upperMost.Y) };
                 return result;
             }
+
 
             // Cull points out of the convex hull that lie inside the
             // trapezoid defined by the vertices with smallest and

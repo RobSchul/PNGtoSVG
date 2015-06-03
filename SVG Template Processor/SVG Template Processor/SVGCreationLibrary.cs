@@ -18,14 +18,14 @@ namespace SVG_Template_Processor
         {   //creation of everything
             pngFilePaths = pngFileLocation;
             outLocation = locat;
-            pngFileNames = pngFile;
+            pngFileNames = pngFile; 
            
         }
         private System.Drawing.Rectangle[] getRegions(System.Drawing.Bitmap file)
         {
             imageProcessingLibrary process = new imageProcessingLibrary(file);
             imageProcessingLibrary process2 = new imageProcessingLibrary(file);
-            System.Drawing.Rectangle[] rect = {new Rectangle(1,1,1,1) }; // = process.getTRegions();
+            System.Drawing.Rectangle[] rect = process.getTRegions();
             return rect;
         }
 
@@ -48,8 +48,6 @@ namespace SVG_Template_Processor
 
               });
         }
-
-
 
 
         /// <summary>
@@ -89,14 +87,14 @@ namespace SVG_Template_Processor
         {
             System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(pngFilePath);//create bitmap of the image  
             double num = autoSize(myBitmap);
-            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink""><g transform=""matrix("+ num + " 0 0 "+ num +" 0 0)\">"; //top half of svg
+            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + myBitmap.Width/2 + " " + myBitmap.Height/2 + "\"><g transform=\"matrix(" + num + " 0 0 " + num + " 0 0)\">"; //top half of svg
             //where the unique ids will be put into the SVG
             System.Drawing.Rectangle[] ids = getRegions(myBitmap);
             for (int i = 0; i < ids.Length; i++)
             {
                 picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill: #00cc00\"/>";
 
-            }
+            } 
             string base64 = ImageToBase64(myBitmap);//change the image into base64 for the svg  
             picEmbedd += @"<image overflow=""visable""" + " width=" + "\"" + myBitmap.Width + "\"" + " height=" + "\"" +
                 myBitmap.Height + "\"" + @" xlink:href=""data:image/png;base64," + base64 + "\"><g></image></svg>";
@@ -104,7 +102,7 @@ namespace SVG_Template_Processor
             save(picEmbedd, pngFileName);
             myBitmap.Dispose();//dispose of the image
 
-        }
+        }  
 
 
         /// <summary>
@@ -120,46 +118,39 @@ namespace SVG_Template_Processor
 
         }
 
-
-
-        /// <summary>
-        /// get the image of what has been linked into the linked embedding
-        /// </summary>
-        /// <param name="link"> where you would get the image</param>
-        private void getImage(string link)
-        {
-            System.Net.HttpWebRequest httpWebRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(link);
-            System.Net.HttpWebResponse httpWebReponse = (System.Net.HttpWebResponse)httpWebRequest.GetResponse();
-            System.IO.Stream stream = httpWebReponse.GetResponseStream();
-            //Image.FromStream(stream).Save("c:\\button.png", System.Drawing.Imaging.ImageFormat.Png);
-
-
-        }
-
         private double autoSize(Bitmap myBitmap)
         {
             double dpiX = myBitmap.Height / myBitmap.VerticalResolution;
             double dpiY = myBitmap.Width / myBitmap.HorizontalResolution;
             double num = 0;
+            float width = myBitmap.Width;
+            float height = myBitmap.Height;
+            
             if (dpiY != dpiX && dpiX < dpiY)
+            {  
                 num = (dpiX + dpiY) / (myBitmap.Height + myBitmap.Width);
+            }
             else if (dpiY == dpiX && myBitmap.Width == myBitmap.Height)
                 num = (dpiX + dpiY) / (myBitmap.Height + myBitmap.Width);
             else
             {
                 num = (dpiX / myBitmap.Width) / (dpiY / myBitmap.Height);
-                if (num >= 1)
-                {
-                    num = .17;
-                }
             }
-
+            if (num < 0)
+                num *= -1;
+            if (num >= 1)
+            {
+                num = .3;
+            }
             while (num < .1)
             {
                 num *= 10;
             }
             return num = Math.Floor(num * 100) / 100;
         }
+
+
+
         public string LinkedImageURL
         {
             get { return linkedImageURL; }
