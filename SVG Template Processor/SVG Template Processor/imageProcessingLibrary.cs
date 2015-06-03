@@ -79,8 +79,7 @@ namespace SVG_Template_Processor
                     for (int p = 0; p < pixelSize; p++, point++)
                     {
                         switch (p)
-                        {
-                            case 3:
+                        {    case 3:
                                 if (*point == 0)
                                     Points.Add(new Point(x, y));
 
@@ -113,6 +112,31 @@ namespace SVG_Template_Processor
                     if (point.X > rightMost.X)
                         rightMost.X = point.X;
                 }
+                List<Rectangle> ret = new List<Rectangle>();
+                while (points.Count > 0)
+                {
+                    Point pBase = points[0];
+                    Rectangle baseR = new Rectangle(pBase, new Size(1, 1)); //create rectangle with first point of transparancy and size of 1,1
+
+                    List<Point> RecPoints = (from P in points where P.X == baseR.X || P.Y == baseR.Y select P).ToList(); //list of points?
+
+                    foreach(Point P in points)
+                    {
+                        if (P.X == baseR.X || P.Y == baseR.Y) // what is actually happeneing 
+                            RecPoints.Add(P);
+                    }
+                    foreach (Point point in RecPoints)
+                    {
+                        if (point.X == pBase.X && point.Y == (baseR.Y + baseR.Height) + 1)
+                            baseR.Height++;
+                        if (point.Y == pBase.Y && point.X == (baseR.X + baseR.Width) + 1)
+                            baseR.Width++;
+                    }
+                    points.RemoveAll(P => baseR.Contains(P));
+                    if (baseR.Width > 1 && baseR.Height > 1)
+                        ret.Add(baseR);
+
+                }
             }
 
             // Find a box that fits inside the MinMax quadrilateral.
@@ -126,7 +150,6 @@ namespace SVG_Template_Processor
                 Rectangle[] result = new Rectangle[] { new Rectangle(leftMost.X, upperMost.Y, rightMost.X - leftMost.X, lowerMost.Y - upperMost.Y) };
                 return result;
             }
-
 
             // Cull points out of the convex hull that lie inside the
             // trapezoid defined by the vertices with smallest and
