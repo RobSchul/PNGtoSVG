@@ -44,7 +44,14 @@ namespace SVG_Template_Processor
             {
                 Point pBase = points[0];
                 Rectangle baseR = new Rectangle(pBase, new Size(1, 1)); //create rectangle with first point of transparancy and size of 1,1
-                List<Point> RecPoints = (from P in points where P.X == baseR.X || P.Y == baseR.Y select P).ToList(); //list of points?
+                List<Point> RecPoints = new List<Point> { }; 
+
+                foreach (Point P in points)
+                {
+                    if (P.X == baseR.X || P.Y == baseR.Y) // what is actually happeneing 
+                        RecPoints.Add(P);
+                }
+
                 foreach (Point point in RecPoints)
                 {
                     if (point.X == pBase.X && point.Y == (baseR.Y + baseR.Height) + 1)
@@ -112,13 +119,15 @@ namespace SVG_Template_Processor
                     if (point.X > rightMost.X)
                         rightMost.X = point.X;
                 }
+
+                /*
                 List<Rectangle> ret = new List<Rectangle>();
                 while (points.Count > 0)
                 {
                     Point pBase = points[0];
                     Rectangle baseR = new Rectangle(pBase, new Size(1, 1)); //create rectangle with first point of transparancy and size of 1,1
 
-                    List<Point> RecPoints = (from P in points where P.X == baseR.X || P.Y == baseR.Y select P).ToList(); //list of points?
+                    List<Point> RecPoints = new List<Point> { }; //(from P in points where P.X == baseR.X || P.Y == baseR.Y select P).ToList(); //list of points?
 
                     foreach(Point P in points)
                     {
@@ -135,8 +144,8 @@ namespace SVG_Template_Processor
                     points.RemoveAll(P => baseR.Contains(P));
                     if (baseR.Width > 1 && baseR.Height > 1)
                         ret.Add(baseR);
-
-                }
+                
+                }*/
             }
 
             // Find a box that fits inside the MinMax quadrilateral.
