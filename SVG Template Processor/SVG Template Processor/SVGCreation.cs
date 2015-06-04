@@ -120,23 +120,7 @@ namespace SVG_Template_Processor
              * */
         }
 
-        private void urlButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                validation.Validate();
-                if (validation.GetInvalidControls().Count != 0)
-                    return;
-                this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                sourceFiles.Items.Add(URLlink.Text);
-                pngFilePaths.Add(URLlink.Text);
-                pngFileNames.Add(URLlink.Text);
-            }
-            catch(Exception a)
-            {
-                a = null;
-            }
-         }
+        
 
         private void bW_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -194,6 +178,11 @@ namespace SVG_Template_Processor
             else
             { //do nothing 
             }
+        }
+
+        private void checkEdit1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
        
        

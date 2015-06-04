@@ -35,17 +35,16 @@ namespace SVG_Template_Processor
             this.sourceFiles = new DevExpress.XtraEditors.ListBoxControl();
             this.ftbEmbedded = new System.Windows.Forms.OpenFileDialog();
             this.outputfilepath = new DevExpress.XtraEditors.TextEdit();
-            this.URLlink = new DevExpress.XtraEditors.TextEdit();
             this.removSeleButton = new DevExpress.XtraEditors.SimpleButton();
             this.validation = new DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider(this.components);
-            this.urlButton = new DevExpress.XtraEditors.SimpleButton();
             this.bW = new System.ComponentModel.BackgroundWorker();
             this.labelControl = new DevExpress.XtraEditors.LabelControl();
             this.removeAll = new DevExpress.XtraEditors.SimpleButton();
+            this.checkEdit1 = new DevExpress.XtraEditors.CheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputfilepath.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.URLlink.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.validation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // ftbcDialogBox
@@ -71,7 +70,7 @@ namespace SVG_Template_Processor
             // ofdButton
             // 
             this.ofdButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ofdButton.Location = new System.Drawing.Point(275, 453);
+            this.ofdButton.Location = new System.Drawing.Point(275, 407);
             this.ofdButton.Name = "ofdButton";
             this.ofdButton.Size = new System.Drawing.Size(120, 26);
             this.ofdButton.TabIndex = 8;
@@ -82,7 +81,7 @@ namespace SVG_Template_Processor
             // svgConvertB
             // 
             this.svgConvertB.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.svgConvertB.Location = new System.Drawing.Point(584, 533);
+            this.svgConvertB.Location = new System.Drawing.Point(584, 487);
             this.svgConvertB.Name = "svgConvertB";
             this.svgConvertB.Size = new System.Drawing.Size(120, 26);
             this.svgConvertB.TabIndex = 9;
@@ -110,7 +109,7 @@ namespace SVG_Template_Processor
             // outputfilepath
             // 
             this.outputfilepath.EditValue = "";
-            this.outputfilepath.Location = new System.Drawing.Point(445, 459);
+            this.outputfilepath.Location = new System.Drawing.Point(445, 413);
             this.outputfilepath.Name = "outputfilepath";
             this.outputfilepath.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
             this.outputfilepath.Size = new System.Drawing.Size(530, 20);
@@ -121,14 +120,6 @@ namespace SVG_Template_Processor
             conditionValidationRule1.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Warning;
             conditionValidationRule1.Value1 = "Please Enter Your Name";
             this.validation.SetValidationRule(this.outputfilepath, conditionValidationRule1);
-            // 
-            // URLlink
-            // 
-            this.URLlink.Location = new System.Drawing.Point(445, 368);
-            this.URLlink.Name = "URLlink";
-            this.URLlink.Size = new System.Drawing.Size(530, 20);
-            this.URLlink.TabIndex = 12;
-            this.URLlink.ToolTip = "File Path to the file that will be embedded into the SVG";
             // 
             // removSeleButton
             // 
@@ -142,15 +133,6 @@ namespace SVG_Template_Processor
             // validation
             // 
             this.validation.ValidationMode = DevExpress.XtraEditors.DXErrorProvider.ValidationMode.Auto;
-            // 
-            // urlButton
-            // 
-            this.urlButton.Location = new System.Drawing.Point(275, 362);
-            this.urlButton.Name = "urlButton";
-            this.urlButton.Size = new System.Drawing.Size(120, 26);
-            this.urlButton.TabIndex = 14;
-            this.urlButton.Text = "URL Link";
-            this.urlButton.Click += new System.EventHandler(this.urlButton_Click);
             // 
             // bW
             // 
@@ -177,17 +159,28 @@ namespace SVG_Template_Processor
             this.removeAll.Text = "Remove All";
             this.removeAll.Click += new System.EventHandler(this.removeAll_Click);
             // 
+            // checkEdit1
+            // 
+            this.checkEdit1.Location = new System.Drawing.Point(273, 213);
+            this.checkEdit1.Name = "checkEdit1";
+            this.checkEdit1.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 9F);
+            this.checkEdit1.Properties.Appearance.Options.UseFont = true;
+            this.checkEdit1.Properties.Caption = "Linked image";
+            this.checkEdit1.Size = new System.Drawing.Size(96, 19);
+            this.checkEdit1.TabIndex = 17;
+            this.checkEdit1.ToolTip = "Check this if it is going to be a linked image and not a png file";
+            this.checkEdit1.CheckedChanged += new System.EventHandler(this.checkEdit1_CheckedChanged);
+            // 
             // SVGCreation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1320, 729);
+            this.Controls.Add(this.checkEdit1);
             this.Controls.Add(this.removeAll);
             this.Controls.Add(this.labelControl);
-            this.Controls.Add(this.urlButton);
             this.Controls.Add(this.removSeleButton);
-            this.Controls.Add(this.URLlink);
             this.Controls.Add(this.outputfilepath);
             this.Controls.Add(this.sourceFiles);
             this.Controls.Add(this.svgConvertB);
@@ -202,8 +195,8 @@ namespace SVG_Template_Processor
             this.Load += new System.EventHandler(this.Form2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputfilepath.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.URLlink.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.validation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -222,14 +215,13 @@ namespace SVG_Template_Processor
         private DevExpress.XtraEditors.SimpleButton svgConvertB;
         private DevExpress.XtraEditors.ListBoxControl sourceFiles;
         private DevExpress.XtraEditors.TextEdit outputfilepath;
-        private DevExpress.XtraEditors.TextEdit URLlink;
         private System.Windows.Forms.OpenFileDialog ftbEmbedded;
         private DevExpress.XtraEditors.SimpleButton removSeleButton;
         private DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider validation;
-        private DevExpress.XtraEditors.SimpleButton urlButton;
         private System.ComponentModel.BackgroundWorker bW;
         private DevExpress.XtraEditors.LabelControl labelControl;
         private DevExpress.XtraEditors.SimpleButton removeAll;
+        private DevExpress.XtraEditors.CheckEdit checkEdit1;
 
 
         

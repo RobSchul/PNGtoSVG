@@ -108,12 +108,12 @@ namespace SVG_Template_Processor
         /// <summary>
         /// creation of the svg file with a linked image 
         /// </summary>
-        private void linkedImage(string pngFile)
+        private void linkedImage(string fileLocat)
         {
             string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
             <svg xmlns=""http://www.w3.org/2000/svg"" xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
             picEmbedd += "<g>" + @"<image xlink:href=""";
-            picEmbedd += pngFile;
+            picEmbedd += fileLocat;
             picEmbedd += " </g></svg>";
 
         }
@@ -161,11 +161,7 @@ namespace SVG_Template_Processor
             get { return outLocation; }
             set { outLocation = value; }
         }
-        public string UrlFinalImage
-        {
-            get { return urlFinalImage; }
-            set { urlFinalImage = value; }
-        }
+       
         public string[] PngFilePaths
         {
             get { return pngFilePaths; }
