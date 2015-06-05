@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RectangleP.cs" />
     <Compile Include="SVGCreation.cs">
       <SubType>Form</SubType>
     </Compile>
