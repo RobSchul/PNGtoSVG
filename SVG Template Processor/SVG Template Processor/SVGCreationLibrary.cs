@@ -27,11 +27,15 @@ namespace SVG_Template_Processor
         private System.Drawing.Rectangle[] getRegions(System.Drawing.Bitmap file)
         {
             imageProcessingLibrary process = new imageProcessingLibrary(file);
-            imageProcessingLibrary process2 = new imageProcessingLibrary(file);
+            
             System.Drawing.Rectangle[] rect = process.getTRegions();
             return rect;
         }
-        
+       
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void buildEmbeddSVG()
         {
             var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
@@ -44,6 +48,10 @@ namespace SVG_Template_Processor
 
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void buildLinkedSVG()
         {
             var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
@@ -115,7 +123,14 @@ namespace SVG_Template_Processor
         {
             string picEmbedd = @"<?xml version=""1.0""?><svg width=""640"" height=""480"" xmlns=""http://www.w3.org/2000/svg""
             xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
-            picEmbedd += "<g>" + "<image x=\"92\" y=\"64\" width=\"469.999993\" height=\"307\" xlink:href=\"";
+            Bitmap image = (Bitmap)Image.FromFile(filePath + "/" + fileName);
+            System.Drawing.Rectangle[] ids = getRegions(image);
+           for (int i = 0; i < ids.Length; i++)
+            {
+                picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill: #00cc00\"/>";
+
+            } 
+            picEmbedd += "<g>" + "<image x=\"0\" y=\"\" width=\"469.999993\" height=\"307\" xlink:href=\"";
             picEmbedd += fileName;
             picEmbedd += "\"/> </g></svg>";
             save(picEmbedd, fileName);
