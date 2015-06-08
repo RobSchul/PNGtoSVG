@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing.Drawing2D;
 
 namespace SVG_Template_Processor
 {
@@ -29,9 +30,9 @@ namespace SVG_Template_Processor
         {
             BitmapData bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
             List<Point> Points = findTPoints(myBitmap, bmData);
-            Points = MakeConvexHull(Points);
+            Points = MakeConvexHull(Points); 
             //return mapTpoints(Points); 
-            return GetMinMaxBox(Points);
+            return GetMinMaxBox(Points); 
         }
         /// <summary>
         ///  map out the points for the rectangle holes 

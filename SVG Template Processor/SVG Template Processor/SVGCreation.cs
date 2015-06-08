@@ -15,6 +15,8 @@ namespace SVG_Template_Processor
         
         private System.Collections.Generic.List<string> pngFilePaths = new System.Collections.Generic.List<string>();
         private System.Collections.Generic.List<string> pngFileNames = new System.Collections.Generic.List<string>();
+        private System.Collections.Generic.List<string> sourceFilelocat = new System.Collections.Generic.List<string>();
+        private Boolean linked = false;
     
         //initalize 
         public SVGCreation()
@@ -58,7 +60,8 @@ namespace SVG_Template_Processor
                     foreach (string FileName in this.ftbcDialogBox.FileNames)
                     {
                         sourceFiles.Items.Add(System.IO.Path.GetFileName(FileName));
-                        pngFilePaths.Add(System.IO.Path.GetFullPath(FileName));
+                        sourceFilelocat.Add(System.IO.Path.GetDirectoryName(FileName));
+                        pngFilePaths.Add(System.IO.Path.GetDirectoryName(FileName));
                         pngFileNames.Add(System.IO.Path.GetFileName(FileName));
                         
 
@@ -93,6 +96,7 @@ namespace SVG_Template_Processor
                 pngFilePaths.RemoveAt(sourceFiles.SelectedIndices[i]);
                 pngFileNames.RemoveAt(sourceFiles.SelectedIndices[i]);
                 sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
+                sourceFilelocat.RemoveAt(sourceFiles.SelectedIndices[i]);
 
             }
 
@@ -108,38 +112,27 @@ namespace SVG_Template_Processor
             {
                 bW.RunWorkerAsync();
             }
-            /*
-             * validation.Validate();
-             if (validation.GetInvalidControls().Count != 0)
-                 return;
-             this.DialogResult = System.Windows.Forms.DialogResult.OK;
-             if (pngFileNames.Count > 0)
-             {   SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), "embed");
-                 create.buildSVG();
-             }
-             * */
-        }
+         }
 
         
 
         private void bW_DoWork(object sender, DoWorkEventArgs e)
         {
-            try
-            {
-                validation.Validate();
-                if (validation.GetInvalidControls().Count != 0)
-                    return;
-                this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                if (pngFileNames.Count > 0)
-                {
-                    SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray());
-                    create.buildSVG();
+           if (!linked)
+                {   if (pngFileNames.Count > 0)
+                    {
+                        SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), sourceFilelocat.ToArray());
+                        create.buildEmbeddSVG();
+                    }
                 }
-            }
-            catch(Exception a)
-            {
-                a = null;
-            }
+                else
+                {   if (pngFileNames.Count > 0)
+                    {
+                        SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), sourceFilelocat.ToArray());
+                        create.buildLinkedSVG();
+                    }
+                }
+  
         }
 
         private void bW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -182,14 +175,11 @@ namespace SVG_Template_Processor
 
         private void checkEdit1_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (checkEdit1.Checked)
+            { linked = true; }
+            else linked = false;
         }
-       
-       
-        
-        
-
-        
+          
     }
 }
 

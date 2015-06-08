@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 namespace SVG_Template_Processor
 {
@@ -8,17 +9,19 @@ namespace SVG_Template_Processor
     {
         private string[] pngFilePaths;
         private string[] pngFileNames;
-        
+        private string[] sourceFileLocat;
+
         private string outLocation = "";
         private string linkedImageURL = "";
         private string urlFinalImage = "";
+        
 
-
-        public SVGCreationLibrary(string[] pngFileLocation, string locat, string[] pngFile)
+        public SVGCreationLibrary(string[] pngFileLocation, string locat, string[] pngFile, string[] locate)
         {   //creation of everything
             pngFilePaths = pngFileLocation;
             outLocation = locat;
-            pngFileNames = pngFile; 
+            pngFileNames = pngFile;
+            sourceFileLocat = locate;
            
         }
         private System.Drawing.Rectangle[] getRegions(System.Drawing.Bitmap file)
@@ -28,27 +31,27 @@ namespace SVG_Template_Processor
             System.Drawing.Rectangle[] rect = process.getTRegions();
             return rect;
         }
-
-        /// <summary>
-        /// build the svg depending on what was chosen 
-        /// either embedded or linked image
-        /// </summary>
-        public void buildSVG()
+        
+        public void buildEmbeddSVG()
         {
             var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
 
             double amount = pngFilePaths.Length;
 
             System.Threading.Tasks.Parallel.ForEach(pathsAndName, pngFile =>
-            {
-                if(!pngFile.Path.Contains(".Png"))
-                    embeddedImage(pngFile.Path, pngFile.Name);//send to the embedding method 
-                else
-                    linkedImage(pngFile.Path);//sent to the linked method 
+            {   embeddedImage(pngFile.Path, pngFile.Name);//send to the embedding method 
+                });
 
-              });
         }
 
+        public void buildLinkedSVG()
+        {
+            var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
+         System.Threading.Tasks.Parallel.ForEach(pathsAndName, pngFile =>
+            {linkedImage(pngFile.Path, pngFile.Name);//sent to the linked method 
+
+            });
+        }
 
         /// <summary>
         /// change the bitmap file into a base64 string for the svg file
@@ -85,7 +88,7 @@ namespace SVG_Template_Processor
         /// </summary>
         private void embeddedImage(string pngFilePath, string pngFileName)
         {
-            System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(pngFilePath);//create bitmap of the image  
+            System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(pngFilePath + "\\"+ pngFileName);//create bitmap of the image  
             double num = autoSize(myBitmap);
             string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + myBitmap.Width/2 + " " + myBitmap.Height/2 + "\"><g transform=\"matrix(" + num + " 0 0 " + num + " 0 0)\">"; //top half of svg
             //where the unique ids will be put into the SVG
@@ -108,14 +111,17 @@ namespace SVG_Template_Processor
         /// <summary>
         /// creation of the svg file with a linked image 
         /// </summary>
-        private void linkedImage(string pngFile)
+        private void linkedImage(string filePath, string fileName)
         {
-            string picEmbedd = @"<?xml version=""1.0"" encoding=""utf-8""?> <!DOCTYPE svg PUBLIC ""-//W3C//DTD SVG 1.1//EN"" ""http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"">
-            <svg xmlns=""http://www.w3.org/2000/svg"" xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
-            picEmbedd += "<g>" + @"<image xlink:href=""";
-            picEmbedd += pngFile;
-            picEmbedd += " </g></svg>";
-
+            string picEmbedd = @"<?xml version=""1.0""?><svg width=""640"" height=""480"" xmlns=""http://www.w3.org/2000/svg""
+            xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
+            picEmbedd += "<g>" + "<image x=\"92\" y=\"64\" width=\"469.999993\" height=\"307\" xlink:href=\"";
+            picEmbedd += fileName;
+            picEmbedd += "\"/> </g></svg>";
+            save(picEmbedd, fileName);
+            
+            
+            System.IO.File.Copy(Path.Combine(filePath, fileName), Path.Combine(outLocation, fileName), true);
         }
 
         private double autoSize(Bitmap myBitmap)
