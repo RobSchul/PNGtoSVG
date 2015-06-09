@@ -97,8 +97,7 @@ namespace SVG_Template_Processor
         private void embeddedImage(string pngFilePath, string pngFileName)
         {
             System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(pngFilePath + "\\"+ pngFileName);//create bitmap of the image  
-            double num = autoSize(myBitmap);
-            string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + myBitmap.Width/2 + " " + myBitmap.Height/2 + "\"><g transform=\"matrix(" + num + " 0 0 " + num + " 0 0)\">"; //top half of svg
+             string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + myBitmap.Width + " " + myBitmap.Height + "\"><g>"; //top half of svg
             //where the unique ids will be put into the SVG
             System.Drawing.Rectangle[] ids = getRegions(myBitmap);
             for (int i = 0; i < ids.Length; i++)
@@ -121,16 +120,18 @@ namespace SVG_Template_Processor
         /// </summary>
         private void linkedImage(string filePath, string fileName)
         {
-            string picEmbedd = @"<?xml version=""1.0""?><svg width=""640"" height=""480"" xmlns=""http://www.w3.org/2000/svg""
-            xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">"; //top part of svg
-            Bitmap image = (Bitmap)Image.FromFile(filePath + "/" + fileName);
+            Image newImage = Image.FromFile(filePath + "/" + fileName);
+            Bitmap image = new Bitmap(newImage);
+            string picEmbedd = @"<?xml version=""1.0""?><svg xmlns=""http://www.w3.org/2000/svg""
+            xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + image.Width + " " + image.Height + "\">"; //top part of svg
+            
             System.Drawing.Rectangle[] ids = getRegions(image);
            for (int i = 0; i < ids.Length; i++)
             {
                 picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill: #00cc00\"/>";
 
             } 
-            picEmbedd += "<g>" + "<image x=\"0\" y=\"\" width=\"469.999993\" height=\"307\" xlink:href=\"";
+            picEmbedd += "<g>" + "<image x=\"0\" y=\"0\" width=\""+ newImage.Width +"\" height=\""+ newImage.Height +"\" xlink:href=\"";
             picEmbedd += fileName;
             picEmbedd += "\"/> </g></svg>";
             save(picEmbedd, fileName);
@@ -139,40 +140,7 @@ namespace SVG_Template_Processor
             System.IO.File.Copy(Path.Combine(filePath, fileName), Path.Combine(outLocation, fileName), true);
         }
 
-        private double autoSize(Bitmap myBitmap)
-        {
-            double dpiX = myBitmap.Height / myBitmap.VerticalResolution;
-            double dpiY = myBitmap.Width / myBitmap.HorizontalResolution;
-            double num = 0;
-            float width = myBitmap.Width;
-            float height = myBitmap.Height;
-            
-            if (dpiY != dpiX && dpiX < dpiY)
-            {  
-                num = (dpiX + dpiY) / (myBitmap.Height + myBitmap.Width);
-            }
-            else if (dpiY == dpiX && myBitmap.Width == myBitmap.Height)
-                num = (dpiX + dpiY) / (myBitmap.Height + myBitmap.Width);
-            else
-            {
-                num = (dpiX / myBitmap.Width) / (dpiY / myBitmap.Height);
-            }
-            if (num < 0)
-                num *= -1;
-            if (num >= 1)
-            {
-                num = .3;
-            }
-            while (num < .1)
-            {
-                num *= 10;
-            }
-            return num = Math.Floor(num * 100) / 100;
-        }
-
-
-
-        public string LinkedImageURL
+         public string LinkedImageURL
         {
             get { return linkedImageURL; }
             set { linkedImageURL = value; }

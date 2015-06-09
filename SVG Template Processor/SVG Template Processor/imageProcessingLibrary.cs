@@ -149,6 +149,7 @@ namespace SVG_Template_Processor
                 }*/
             }
 
+            
             // Find a box that fits inside the MinMax quadrilateral.
             private static Rectangle[] GetMinMaxBox(List<Point> points)
             {

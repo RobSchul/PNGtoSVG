@@ -95,8 +95,9 @@ namespace SVG_Template_Processor
             {
                 pngFilePaths.RemoveAt(sourceFiles.SelectedIndices[i]);
                 pngFileNames.RemoveAt(sourceFiles.SelectedIndices[i]);
-                sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
                 sourceFilelocat.RemoveAt(sourceFiles.SelectedIndices[i]);
+                sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
+                
 
             }
 
