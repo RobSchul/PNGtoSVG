@@ -29,6 +29,7 @@ namespace SVG_Template_Processor
             imageProcessingLibrary process = new imageProcessingLibrary(file);
             
             System.Drawing.Rectangle[] rect = process.getTRegions();
+            
             return rect;
         }
        
@@ -40,11 +41,10 @@ namespace SVG_Template_Processor
         {
             var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
 
-            double amount = pngFilePaths.Length;
-
-            System.Threading.Tasks.Parallel.ForEach(pathsAndName, pngFile =>
+         System.Threading.Tasks.Parallel.ForEach(pathsAndName, pngFile =>
             {   embeddedImage(pngFile.Path, pngFile.Name);//send to the embedding method 
                 });
+            
 
         }
 
@@ -65,7 +65,7 @@ namespace SVG_Template_Processor
         /// change the bitmap file into a base64 string for the svg file
         /// </summary>
         /// <param name="myBitmap"></param>
-        /// <returns></returns>
+        /// <returns> a base 64 string </returns>
         private string ImageToBase64(System.Drawing.Bitmap myBitmap)
         {
             System.IO.MemoryStream ms = new System.IO.MemoryStream();//change the bitmap file into base64 for the svg file
@@ -84,7 +84,7 @@ namespace SVG_Template_Processor
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFileName + ".svg")) //write the file to the certian location
             {
-                file.Write(picEmbedd);//write to location  
+                file.Write(picEmbedd, true);//write to location  
                 file.Dispose();
             } //cleaning
         }
@@ -123,7 +123,7 @@ namespace SVG_Template_Processor
             Image newImage = Image.FromFile(filePath + "/" + fileName);
             Bitmap image = new Bitmap(newImage);
             string picEmbedd = @"<?xml version=""1.0""?><svg xmlns=""http://www.w3.org/2000/svg""
-            xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + image.Width + " " + image.Height + "\">"; //top part of svg
+            xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + image.Width + " " + image.Height + "\"><g>"; //top part of svg
             
             System.Drawing.Rectangle[] ids = getRegions(image);
            for (int i = 0; i < ids.Length; i++)
@@ -131,7 +131,7 @@ namespace SVG_Template_Processor
                 picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill: #00cc00\"/>";
 
             } 
-            picEmbedd += "<g>" + "<image x=\"0\" y=\"0\" width=\""+ newImage.Width +"\" height=\""+ newImage.Height +"\" xlink:href=\"";
+            picEmbedd +=  "<image x=\"0\" y=\"0\" width=\""+ newImage.Width +"\" height=\""+ newImage.Height +"\" xlink:href=\"";
             picEmbedd += fileName;
             picEmbedd += "\"/> </g></svg>";
             save(picEmbedd, fileName);
