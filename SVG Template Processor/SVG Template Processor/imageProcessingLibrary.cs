@@ -29,10 +29,14 @@ namespace SVG_Template_Processor
         public Rectangle[] getTRegions()
         {
             BitmapData bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
-            List<Point> Points = findTPoints(myBitmap, bmData);
-            Points = MakeConvexHull(Points); 
-            //return mapTpoints(Points); 
-            return GetMinMaxBox(Points); 
+            Rectangle[] amount = mapTpoints(findTPoints(myBitmap, bmData));
+            if (amount.Count() > 1)
+                return amount;
+            else
+            {
+                List<Point>  Points = MakeConvexHull(findTPoints(myBitmap, bmData));
+                return GetMinMaxBox(Points);
+            }
         }
         /// <summary>
         ///  map out the points for the rectangle holes 
@@ -61,7 +65,7 @@ namespace SVG_Template_Processor
                         baseR.Width++;
                  }
                points.RemoveAll(P => baseR.Contains(P));// problem in this area
-                if (baseR.Width > 1 && baseR.Height > 1)
+                if (baseR.Width > 100 && baseR.Height > 100)
                     ret.Add(baseR);
 
             }
@@ -97,7 +101,7 @@ namespace SVG_Template_Processor
                 point += offset;
             }
 
-            myBitmap.UnlockBits(bmData);
+            
             return Points;
 
         }
