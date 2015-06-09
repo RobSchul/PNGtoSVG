@@ -109,9 +109,7 @@ namespace SVG_Template_Processor
             private static void GetMinMaxCorners(List<Point> points, ref Point upperMostPoint, ref Point lowerMostPoint, ref Point leftMost, ref Point rightMost)
             {  //Start with the first point
                 upperMostPoint = lowerMostPoint = leftMost = rightMost = points[0];
-                
-                
-                //Search the other points.
+                 //Search the other points.
                 foreach (Point point in points)
                 {
                     if (point.Y > lowerMostPoint.Y)
@@ -123,19 +121,14 @@ namespace SVG_Template_Processor
                     if (point.X > rightMost.X)
                         rightMost.X = point.X;
                 }
-
-                
             }
 
             
             // Find a box that fits inside the MinMax quadrilateral.
             private static Rectangle[] GetMinMaxBox(List<Point> points)
-            {
-                // Find the MinMax quadrilateral.
+            { // Find the MinMax quadrilateral.
                 Point lowerMost = new Point(0, 0),  leftMost = lowerMost, rightMost = lowerMost, upperMost = lowerMost;
                 GetMinMaxCorners(points,ref upperMost , ref lowerMost, ref leftMost, ref rightMost);
-
-
                 Rectangle[] result = new Rectangle[] { new Rectangle(leftMost.X, upperMost.Y, rightMost.X - leftMost.X, lowerMost.Y - upperMost.Y) };
                 return result;
             }
@@ -145,11 +138,8 @@ namespace SVG_Template_Processor
             // largest X and Y coordinates.
             // Return the points that are not culled.
             private static List<Point> HullCull(List<Point> points)
-            {
-                // Find a culling box.
+            {   
                 Rectangle[] culling_box = GetMinMaxBox(points);
-
-                // Cull the points.
                 List<Point> results = new List<Point>();
                 foreach (Point point in points)
                 {
@@ -159,20 +149,14 @@ namespace SVG_Template_Processor
                         point.Y <= culling_box[0].Top ||
                         point.Y >= culling_box[0].Bottom)
                     {
-                        // This point cannot be culled.
-                        // Add it to the results.
-                        results.Add(point);
+                        results.Add(point);  // Add point to the results.
                     }
                 }
                 return results;
             }
 
-            // Return the points that make up a polygon's convex hull.
-            // This method leaves the points list unchanged.
             public static List<Point> MakeConvexHull(List<Point> points)
-            {
-                // Cull.
-                points = HullCull(points);
+            {   points = HullCull(points);
 
                 // Find the remaining point with the smallest Y value.
                 // if (there's a tie, take the one with the smaller X value.
@@ -186,16 +170,14 @@ namespace SVG_Template_Processor
                     }
                 }
 
-                // Move this point to the convex hull.
-                List<Point> hull = new List<Point>();
-                hull.Add(bestPoint);
+                 List<Point> hull = new List<Point>();
+                hull.Add(bestPoint); // add point
                 points.Remove(bestPoint);
 
                 // Start wrapping up the other points.
                 float sweep_angle = 0;
                 for (;;)
                 {   // Find the point with smallest AngleValue
-                    // from the last point.
                     int X = hull[hull.Count - 1].X;
                     int Y = hull[hull.Count - 1].Y;
                     bestPoint = points[0];
@@ -216,20 +198,14 @@ namespace SVG_Template_Processor
                     // See if the first point is better.
                     // If so, we are done.
                     float first_angle = AngleValue(X, Y, hull[0].X, hull[0].Y);
-                    if ((first_angle >= sweep_angle) &&
-                        (best_angle >= first_angle))
-                    {
-                        // The first point is better. We're done.
-                        break;
-                    }
-
-                    // Add the best point to the convex hull.
+                    if ((first_angle >= sweep_angle)&&(best_angle >= first_angle)) break;
+                   
+                    // Add the best point 
                     hull.Add(bestPoint);
                     points.Remove(bestPoint);
 
                     sweep_angle = best_angle;
 
-                    // If all of the points are on the hull, we're done.
                     if (points.Count == 0) break;
                 }
 
