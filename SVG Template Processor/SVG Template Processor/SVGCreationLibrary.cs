@@ -12,7 +12,7 @@ namespace SVG_Template_Processor
         private string[] sourceFileLocat;
 
         private string outLocation = "";
-        private string linkedImageURL = "";
+      
         private string urlFinalImage = "";
         
 
@@ -82,6 +82,8 @@ namespace SVG_Template_Processor
         /// <param name="pngFileName">location to be saved</param>
         private void save(string picEmbedd, string pngFileName)
         {
+            System.IO.FileInfo filePath = new System.IO.FileInfo(outLocation + "\\" + pngFileName + ".svg");
+            filePath.Directory.Create();
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFileName + ".svg")) //write the file to the certian location
             {
                 file.Write(picEmbedd, true);//write to location  
@@ -96,7 +98,7 @@ namespace SVG_Template_Processor
         /// </summary>
         private void embeddedImage(string pngFilePath, string pngFileName)
         {
-            System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(pngFilePath + "\\"+ pngFileName);//create bitmap of the image  
+            System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(pngFilePath + "\\" + pngFileName);//create bitmap of the image  
              string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + myBitmap.Width + " " + myBitmap.Height + "\"><g>"; //top half of svg
             //where the unique ids will be put into the SVG
             System.Drawing.Rectangle[] ids = getRegions(myBitmap);
@@ -120,7 +122,7 @@ namespace SVG_Template_Processor
         /// </summary>
         private void linkedImage(string filePath, string fileName)
         {
-            Image newImage = Image.FromFile(filePath + "/" + fileName);
+            Image newImage = Image.FromFile(filePath + "\\" + fileName );
             Bitmap image = new Bitmap(newImage);
             string picEmbedd = @"<?xml version=""1.0""?><svg xmlns=""http://www.w3.org/2000/svg""
             xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + image.Width + " " + image.Height + "\"><g>"; //top part of svg
@@ -135,16 +137,18 @@ namespace SVG_Template_Processor
             picEmbedd += fileName;
             picEmbedd += "\"/> </g></svg>";
             save(picEmbedd, fileName);
-            
-            
-            System.IO.File.Copy(Path.Combine(filePath, fileName), Path.Combine(outLocation, fileName), true);
+          
+            try
+            {
+                System.IO.File.Copy(Path.Combine(filePath, fileName), Path.Combine(outLocation, fileName), true);
+            }
+            catch(Exception e)
+            {
+                e.ToString();
+            }
         }
 
-         public string LinkedImageURL
-        {
-            get { return linkedImageURL; }
-            set { linkedImageURL = value; }
-        }
+        
         public string OutLocation
         {
             get { return outLocation; }

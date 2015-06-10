@@ -190,7 +190,7 @@ namespace SVG_Template_Processor
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SVGCreation";
-            this.Text = "SVGCreation";
+            this.Text = "SVG Conversion";
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.Load += new System.EventHandler(this.Form2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).EndInit();

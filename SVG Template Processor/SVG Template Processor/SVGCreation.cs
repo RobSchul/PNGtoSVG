@@ -59,7 +59,7 @@ namespace SVG_Template_Processor
                     
                     foreach (string FileName in this.ftbcDialogBox.FileNames)
                     {
-                        sourceFiles.Items.Add(System.IO.Path.GetFileName(FileName));
+                        sourceFiles.Items.Add(System.IO.Path.GetFileNameWithoutExtension(FileName));
                         sourceFilelocat.Add(System.IO.Path.GetDirectoryName(FileName));
                         pngFilePaths.Add(System.IO.Path.GetDirectoryName(FileName));
                         pngFileNames.Add(System.IO.Path.GetFileName(FileName));
@@ -121,7 +121,7 @@ namespace SVG_Template_Processor
         {
            if (!linked)
                 {   if (pngFileNames.Count > 0)
-                    {
+                    {   //sourceFiles.Items.
                         SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), sourceFilelocat.ToArray());
                         create.buildEmbeddSVG();
                     }
