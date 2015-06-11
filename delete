@@ -1,0 +1,95 @@
+public static List<Point> MakeConvexHull(List<Point> points)
+            {   points = HullCull(points);
+
+                // Find the remaining point with the smallest Y value.
+                // if (there's a tie, take the one with the smaller X value.
+                Point bestPoint = points[0];
+                foreach (Point point in points)
+                {
+                    if ((point.Y < bestPoint.Y) ||
+                       ((point.Y == bestPoint.Y) && (point.X < bestPoint.X)))
+                    {
+                        bestPoint = point;
+                    }
+                }
+
+                 List<Point> hull = new List<Point>();
+                hull.Add(bestPoint); // add point
+                points.Remove(bestPoint);
+
+                // Start wrapping up the other points.
+                float sweep_angle = 0;
+                for (;;)
+                {   // Find the point with smallest AngleValue
+                    int X = hull[hull.Count - 1].X;
+                    int Y = hull[hull.Count - 1].Y;
+                    bestPoint = points[0];
+                    float best_angle = 3600;
+
+                    // Search the rest of the points.
+                    foreach (Point pt in points)
+                    {
+                        float test_angle = AngleValue(X, Y, pt.X, pt.Y);
+                        if ((test_angle >= sweep_angle) &&
+                            (best_angle > test_angle))
+                        {
+                            best_angle = test_angle;
+                            bestPoint = pt;
+                        }
+                    }
+
+                    // See if the first point is better.
+                    // If so, we are done.
+                    float first_angle = AngleValue(X, Y, hull[0].X, hull[0].Y);
+                    if ((first_angle >= sweep_angle)&&(best_angle >= first_angle)) break;
+                   
+                    // Add the best point 
+                    hull.Add(bestPoint);
+                    points.Remove(bestPoint);
+
+                    sweep_angle = best_angle;
+
+                    if (points.Count == 0) break;
+                }
+
+                return hull;
+            }
+
+            // Return a number that gives the ordering of angles
+            // WRST horizontal from the point (x1, y1) to (x2, y2).
+            // In other words, AngleValue(x1, y1, x2, y2) is not
+            // the angle, but if:
+            //   Angle(x1, y1, x2, y2) > Angle(x1, y1, x2, y2)
+            // then
+            //   AngleValue(x1, y1, x2, y2) > AngleValue(x1, y1, x2, y2)
+            // this angle is greater than the angle for another set
+            // of points,) this number for
+            //
+            // This function is dy / (dy + dx).
+            private static float AngleValue(int x1, int y1, int x2, int y2)
+            {
+                float dx, dy, ax, ay, t;
+
+                dx = x2 - x1;
+                ax = Math.Abs(dx);
+                dy = y2 - y1;
+                ay = Math.Abs(dy);
+                if (ax + ay == 0)
+                {
+                    // if (the two points are the same, return 360.
+                    t = 360f / 9f;
+                }
+                else
+                {
+                    t = dy / (ax + ay);
+                }
+                if (dx < 0)
+                {
+                    t = 2 - t;
+                }
+                else if (dy < 0)
+                {
+                    t = 4 + t;
+                }
+                return t * 90;
+            }
