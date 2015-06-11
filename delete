@@ -1,3 +1,22 @@
+private static List<Point> HullCull(List<Point> points)
+            {   
+                Rectangle[] culling_box = GetMinMaxBox(points);
+                List<Point> results = new List<Point>();
+                foreach (Point point in points)
+                {
+                    // See if (this point lies outside of the culling box.
+                    if (point.X <= culling_box[0].Left ||
+                        point.X >= culling_box[0].Right ||
+                        point.Y <= culling_box[0].Top ||
+                        point.Y >= culling_box[0].Bottom)
+                    {
+                        results.Add(point);  // Add point to the results.
+                    }
+                }
+                return results;
+            }
+
+
 public static List<Point> MakeConvexHull(List<Point> points)
             {   points = HullCull(points);
 
