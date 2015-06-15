@@ -22,47 +22,50 @@ namespace SVG_Template_Processor
             myBitmap = bits;
 
         }
-        /// <summary>
-        ///  get all regions that are transparent and sent back an array of rectangles  
+                /// <summary>
+        ///  get all regions that are transparent and sent back an array of RectanglePs  
         ///  
         /// </summary>
-        public Rectangle[] getTRegions()
+        public RectangleP[] getTRegions()
         {
             BitmapData bmData = myBitmap.LockBits(new Rectangle(0, 0, myBitmap.Width, myBitmap.Height), ImageLockMode.ReadOnly, myBitmap.PixelFormat);
-            Rectangle[] amount = mapTpoints(findTPoints(myBitmap, bmData));
+            RectangleP[] amount = mapTpoints(findTPoints(myBitmap, bmData));
             if (amount.Count() > 1)
                 return amount;
             else
                 return GetMinMaxBox(findTPoints(myBitmap, bmData));
         }
         /// <summary>
-        ///  map out the points for the rectangle holes 
+        ///  map out the points for the RectangleP holes 
         ///  put those into an array for easy labeling of where they are
         /// </summary>
-        private Rectangle[] mapTpoints(List<Point> points)
+        private RectangleP[] mapTpoints(List<Point> points)
         {
-            List<Rectangle> ret = new List<Rectangle>();
+            List<RectangleP> ret = new List<RectangleP>();
             while (points.Count > 0)
             {
                 Point pBase = points[0];
-                Rectangle baseR = new Rectangle(pBase, new Size(1, 1)); //create rectangle with first point of transparancy and size of 1,1
+                RectangleP baseR = new RectangleP(pBase, new Size(1, 1)); //create RectangleP with first point of transparancy and size of 1,1
                 List<Point> RecPoints = new List<Point> { };
 
                 foreach (Point P in points)
                 {
-                    if (P.X == baseR.X || P.Y == baseR.Y) // what is actually happeneing 
-                        RecPoints.Add(P);
-                }
-
-                
-
-                foreach (Point point in RecPoints)
-                {
-                    if (point.X == pBase.X && point.Y == (baseR.Y + baseR.Height) + 1)
+                    if (P.Y == (baseR.Y + baseR.Height) + 1)
                         baseR.Height++;
-                    if (point.Y == pBase.Y && point.X == (baseR.X + baseR.Width) + 1)
+                    if (P.X == (baseR.X + baseR.Width) + 1) // mapping the width of each RectangleP within the template
                         baseR.Width++;
+
+                    
                 }
+                
+               /* //problem mapping some templates
+                 foreach (Point point in RecPoints)
+                 {
+                    if (point.Y == (baseR.Y + baseR.Height) + 1) //mapping the height of each RectangleP within the template
+                        baseR.Height++;
+                    if (point.X == (baseR.X + baseR.Width) + 1) // mapping the width of each RectangleP within the template
+                        baseR.Width++;
+                }*/
                 points.RemoveAll(P => baseR.Contains(P));
                 if (baseR.Width > 100 && baseR.Height > 100)
                     ret.Add(baseR);
@@ -123,11 +126,11 @@ namespace SVG_Template_Processor
 
             
             // Find a box that fits inside the MinMax quadrilateral.
-            private static Rectangle[] GetMinMaxBox(List<Point> points)
+            private static RectangleP[] GetMinMaxBox(List<Point> points)
             { // Find the MinMax quadrilateral.
                 Point lowerMost = new Point(0, 0),  leftMost = lowerMost, rightMost = lowerMost, upperMost = lowerMost;
                 GetMinMaxCorners(points,ref upperMost , ref lowerMost, ref leftMost, ref rightMost);
-                Rectangle[] result = new Rectangle[] { new Rectangle(leftMost.X, upperMost.Y, rightMost.X - leftMost.X, lowerMost.Y - upperMost.Y) };
+                RectangleP[] result = new RectangleP[] { new RectangleP(leftMost.X, upperMost.Y, rightMost.X - leftMost.X, lowerMost.Y - upperMost.Y) };
                 return result;
             }
 
