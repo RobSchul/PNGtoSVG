@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="imageProcessingLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RectangleP.cs" />
     <Compile Include="Settings.Designer.cs" />
     <Compile Include="SVGCreation.cs">
       <SubType>Form</SubType>

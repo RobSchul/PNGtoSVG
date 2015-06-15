@@ -728,7 +728,11 @@ public class RectangleP
     public bool Contains(Point Location)
     {
         Location = new Point(Location.X, Location.Y);
-
+        Matrix mx = new Matrix();
+        mx.RotateAt(-_Angle, _Rectangle.Location);
+        Point[] Points = new Point[] { Location };
+        mx.TransformPoints(Points);
+        Location = Points[0];
         return _Rectangle.Contains(Location);
     }
     /// <summary>
