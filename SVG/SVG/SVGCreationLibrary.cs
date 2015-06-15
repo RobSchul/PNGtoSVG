@@ -12,7 +12,7 @@ namespace SVG_Template_Processor
         private string[] sourceFileLocat;
 
         private string outLocation = "";
-
+        private string linkedImageURL = "";
         private string urlFinalImage = "";
 
 
@@ -24,12 +24,11 @@ namespace SVG_Template_Processor
             sourceFileLocat = locate;
 
         }
-        private RectangleP[] getRegions(System.Drawing.Bitmap file)
+        private System.Drawing.Rectangle[] getRegions(System.Drawing.Bitmap file)
         {
             imageProcessingLibrary process = new imageProcessingLibrary(file);
 
-            RectangleP[] rect = process.getTRegions();
-
+            System.Drawing.Rectangle[] rect = process.getTRegions();
             return rect;
         }
 
@@ -41,11 +40,12 @@ namespace SVG_Template_Processor
         {
             var pathsAndName = pngFilePaths.Zip(pngFileNames, (path, name) => new { Path = path, Name = name });
 
+            double amount = pngFilePaths.Length;
+
             System.Threading.Tasks.Parallel.ForEach(pathsAndName, pngFile =>
             {
                 embeddedImage(pngFile.Path, pngFile.Name);//send to the embedding method 
             });
-
 
         }
 
@@ -67,7 +67,7 @@ namespace SVG_Template_Processor
         /// change the bitmap file into a base64 string for the svg file
         /// </summary>
         /// <param name="myBitmap"></param>
-        /// <returns> a base 64 string </returns>
+        /// <returns></returns>
         private string ImageToBase64(System.Drawing.Bitmap myBitmap)
         {
             System.IO.MemoryStream ms = new System.IO.MemoryStream();//change the bitmap file into base64 for the svg file
@@ -84,11 +84,9 @@ namespace SVG_Template_Processor
         /// <param name="pngFileName">location to be saved</param>
         private void save(string picEmbedd, string pngFileName)
         {
-            System.IO.FileInfo filePath = new System.IO.FileInfo(outLocation + "\\" + pngFileName + ".svg");
-            filePath.Directory.Create();
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(outLocation + "\\" + pngFileName + ".svg")) //write the file to the certian location
             {
-                file.Write(picEmbedd, true);//write to location  
+                file.Write(picEmbedd);//write to location  
                 file.Dispose();
             } //cleaning
         }
@@ -103,10 +101,10 @@ namespace SVG_Template_Processor
             System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(pngFilePath + "\\" + pngFileName);//create bitmap of the image  
             string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + myBitmap.Width + " " + myBitmap.Height + "\"><g>"; //top half of svg
             //where the unique ids will be put into the SVG
-            RectangleP[] ids = getRegions(myBitmap);
+            System.Drawing.Rectangle[] ids = getRegions(myBitmap);
             for (int i = 0; i < ids.Length; i++)
             {
-                picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill:transparent\"/>";
+                picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill: #00cc00\"/>";
 
             }
             string base64 = ImageToBase64(myBitmap);//change the image into base64 for the svg  
@@ -124,33 +122,31 @@ namespace SVG_Template_Processor
         /// </summary>
         private void linkedImage(string filePath, string fileName)
         {
-            Image newImage = Image.FromFile(filePath + "\\" + fileName);
+            Image newImage = Image.FromFile(filePath + "/" + fileName);
             Bitmap image = new Bitmap(newImage);
             string picEmbedd = @"<?xml version=""1.0""?><svg xmlns=""http://www.w3.org/2000/svg""
-            xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + image.Width + " " + image.Height + "\"><g>"; //top part of svg
+            xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + image.Width + " " + image.Height + "\">"; //top part of svg
 
-            RectangleP[] ids = getRegions(image);
+            System.Drawing.Rectangle[] ids = getRegions(image);
             for (int i = 0; i < ids.Length; i++)
             {
-                picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill:transparent\"/>";
+                picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill: #00cc00\"/>";
 
             }
-            picEmbedd += "<image x=\"0\" y=\"0\" width=\"" + newImage.Width + "\" height=\"" + newImage.Height + "\" xlink:href=\"";
+            picEmbedd += "<g>" + "<image x=\"0\" y=\"0\" width=\"" + newImage.Width + "\" height=\"" + newImage.Height + "\" xlink:href=\"";
             picEmbedd += fileName;
             picEmbedd += "\"/> </g></svg>";
             save(picEmbedd, fileName);
 
-            try
-            {
-                System.IO.File.Copy(Path.Combine(filePath, fileName), Path.Combine(outLocation, fileName), true);
-            }
-            catch (Exception e)
-            {
-                e.ToString();
-            }
+
+            System.IO.File.Copy(Path.Combine(filePath, fileName), Path.Combine(outLocation, fileName), true);
         }
 
-
+        public string LinkedImageURL
+        {
+            get { return linkedImageURL; }
+            set { linkedImageURL = value; }
+        }
         public string OutLocation
         {
             get { return outLocation; }

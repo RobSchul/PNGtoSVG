@@ -81,7 +81,6 @@ namespace SVG_Template_Processor
             // svgConvertB
             // 
             this.svgConvertB.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.svgConvertB.Enabled = false;
             this.svgConvertB.Location = new System.Drawing.Point(584, 487);
             this.svgConvertB.Name = "svgConvertB";
             this.svgConvertB.Size = new System.Drawing.Size(120, 26);
@@ -121,7 +120,6 @@ namespace SVG_Template_Processor
             conditionValidationRule1.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Warning;
             conditionValidationRule1.Value1 = "Please Enter Your Name";
             this.validation.SetValidationRule(this.outputfilepath, conditionValidationRule1);
-            this.outputfilepath.EditValueChanged += new System.EventHandler(this.outputfilepath_EditValueChanged);
             // 
             // removSeleButton
             // 
@@ -192,7 +190,7 @@ namespace SVG_Template_Processor
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SVGCreation";
-            this.Text = "SVG Conversion";
+            this.Text = "SVGCreation";
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.Load += new System.EventHandler(this.Form2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.sourceFiles)).EndInit();
