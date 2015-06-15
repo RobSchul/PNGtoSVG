@@ -112,3 +112,45 @@ public static List<Point> MakeConvexHull(List<Point> points)
                 }
                 return t * 90;
             }
+
+
+
+
+
+
+
+Point pBase = points[0];
+                RectanglePF baseR = new RectanglePF(pBase, new Size(1, 1)); //create rectangle with first point of transparancy and size of 1,1
+                List<Point> RecPoints = new List<Point> { };
+
+                Point upperMostPoint = points[0], lowerMostPoint = upperMostPoint, leftMost = lowerMostPoint, rightMost = lowerMostPoint;
+
+                foreach (Point P in points)
+                {
+                    if (P.X == baseR.X || P.Y == baseR.Y) 
+                        RecPoints.Add(P);
+                }
+
+                foreach (Point point in RecPoints)
+                {
+                    if (point.Y == pBase.Y && point.X == (baseR.X + baseR.Width) + 1)
+                    {
+                        baseR.Width++;
+                       
+                    }
+                    if (point.X == pBase.X && point.Y == (baseR.Y + baseR.Height) + 1) 
+                    {
+                        baseR.Height++;
+                       
+                    }
+                    
+                }
+                
+
+                
+                points.RemoveAll(P => baseR.Contains(P));// problem in this area
+                if (baseR.Width > 1 && baseR.Height > 1)
+                    ret.Add(baseR);
+
+            }
+            return ret.ToArray();
