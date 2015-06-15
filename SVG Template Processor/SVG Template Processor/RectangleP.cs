@@ -725,6 +725,17 @@ public class RectangleP
     /// </summary>
     /// <param name="Location">Point to check</param>
     /// <returns>weather the Rectangle contains the given Location</returns>
+    public bool Contains(Point Location, Boolean tru)
+    {
+        Location = new Point(Location.X, Location.Y);
+
+        return _Rectangle.Contains(Location);
+    }
+    /// <summary>
+    /// Returns weather the Rectangle contains the given Location 
+    /// </summary>
+    /// <param name="Location">Point to check</param>
+    /// <returns>weather the Rectangle contains the given Location</returns>
     public bool Contains(Point Location)
     {
         Location = new Point(Location.X, Location.Y);
