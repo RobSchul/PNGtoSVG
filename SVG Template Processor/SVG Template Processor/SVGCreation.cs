@@ -180,6 +180,13 @@ namespace SVG_Template_Processor
             { linked = true; }
             else linked = false;
         }
+
+        private void outputfilepath_EditValueChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(outputfilepath.Text))
+                svgConvertB.Enabled = true;
+            else svgConvertB.Enabled = false;
+        }
           
     }
 }

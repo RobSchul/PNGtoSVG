@@ -24,11 +24,11 @@ namespace SVG_Template_Processor
             sourceFileLocat = locate;
            
         }
-        private System.Drawing.Rectangle[] getRegions(System.Drawing.Bitmap file)
+        private Rectangle[] getRegions(System.Drawing.Bitmap file)
         {
             imageProcessingLibrary process = new imageProcessingLibrary(file);
             
-            System.Drawing.Rectangle[] rect = process.getTRegions();
+           Rectangle[] rect = process.getTRegions();
             
             return rect;
         }
@@ -101,7 +101,7 @@ namespace SVG_Template_Processor
             System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(pngFilePath + "\\" + pngFileName);//create bitmap of the image  
              string picEmbedd = @"<svg xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + myBitmap.Width + " " + myBitmap.Height + "\"><g>"; //top half of svg
             //where the unique ids will be put into the SVG
-            System.Drawing.Rectangle[] ids = getRegions(myBitmap);
+             Rectangle[] ids = getRegions(myBitmap);
             for (int i = 0; i < ids.Length; i++)
             {
                 picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill: #00cc00\"/>";
@@ -126,8 +126,8 @@ namespace SVG_Template_Processor
             Bitmap image = new Bitmap(newImage);
             string picEmbedd = @"<?xml version=""1.0""?><svg xmlns=""http://www.w3.org/2000/svg""
             xmlns:svg=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 " + image.Width + " " + image.Height + "\"><g>"; //top part of svg
-            
-            System.Drawing.Rectangle[] ids = getRegions(image);
+
+            Rectangle[] ids = getRegions(image);
            for (int i = 0; i < ids.Length; i++)
             {
                 picEmbedd += "<rect id=\"" + i + "\" x= \"" + ids[i].X + "\" y=\"" + ids[i].Y + "\" width=\"" + ids[i].Width + "\" height=\"" + ids[i].Height + "\"  style=\"fill: #00cc00\"/>";
