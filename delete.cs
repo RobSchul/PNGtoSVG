@@ -154,3 +154,29 @@ Point pBase = points[0];
 
             }
             return ret.ToArray();
+
+
+
+
+if (P.Y == (baseR.Y + baseR.Height) + 1)
+                    {
+                        baseR.Height++;
+                        mappingPoints.Add(P);
+                    }
+                    if (P.X == (baseR.X + baseR.Width) + 1)
+                    {
+                        mappingPoints.Add(P);
+                        baseR.Width++;
+                    }
+                    if (P.X == baseR.X - 1)
+                    {
+                        mappingPoints.Add(P);
+                        baseR.X = P.X;
+                        baseR.Width++;
+                    }
+                    if (P.Y == baseR.Y - 1)
+                    {
+                        mappingPoints.Add(P);
+                        baseR.Y = P.Y;
+                        baseR.Height++;
+                    }
