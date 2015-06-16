@@ -180,3 +180,6 @@ if (P.Y == (baseR.Y + baseR.Height) + 1)
                         baseR.Y = P.Y;
                         baseR.Height++;
                     }
+                    
+                    
+                    return (P.X == _Left - 1 || P.X == _Right + 1 || (P.X >= _Left && P.X <= _Right)) || (P.Y == _Top - 1 || P.Y == _Bottom + 1 || (P.Y >= _Top && P.Y <= _Bottom));
