@@ -5,9 +5,21 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SVG Template Processor", "SVG Template Processor\SVG Template Processor.csproj", "{1298F226-AF73-47C6-9121-C9B7C5484605}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SVG", "..\SVG\SVG\SVG.csproj", "{E0CD7A1E-C822-4079-A7EC-3D6C4D6B4F3A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SVG", "..\..\..\..\..\..\Repos\PNGtoSVG\SVG\SVG\SVG.csproj", "{E0CD7A1E-C822-4079-A7EC-3D6C4D6B4F3A}"
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://chptfs:8080/tfs/fpsg
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = SVG\u0020Template\u0020Processor\\SVG\u0020Template\u0020Processor.csproj
+		SccProjectName1 = SVG\u0020Template\u0020Processor
+		SccLocalPath1 = SVG\u0020Template\u0020Processor
+		SccProjectUniqueName2 = ..\\..\\..\\..\\..\\..\\Repos\\PNGtoSVG\\SVG\\SVG\\SVG.csproj
+		SccProjectName2 = SVG
+		SccLocalPath2 = ..\\..\\..\\..\\..\\..\\Repos\\PNGtoSVG\\SVG\\SVG
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

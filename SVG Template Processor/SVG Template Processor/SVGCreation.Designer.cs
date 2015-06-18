@@ -25,7 +25,6 @@ namespace SVG_Template_Processor
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraEditors.DXErrorProvider.ConditionValidationRule conditionValidationRule1 = new DevExpress.XtraEditors.DXErrorProvider.ConditionValidationRule();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SVGCreation));
             this.ftbcDialogBox = new System.Windows.Forms.OpenFileDialog();
             this.outDialogBox = new System.Windows.Forms.FolderBrowserDialog();
@@ -116,11 +115,6 @@ namespace SVG_Template_Processor
             this.outputfilepath.Size = new System.Drawing.Size(530, 20);
             this.outputfilepath.TabIndex = 10;
             this.outputfilepath.ToolTip = "Destination of where the converted SVG files will go";
-            conditionValidationRule1.ConditionOperator = DevExpress.XtraEditors.DXErrorProvider.ConditionOperator.IsNotBlank;
-            conditionValidationRule1.ErrorText = "Cannot be left empty";
-            conditionValidationRule1.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Warning;
-            conditionValidationRule1.Value1 = "Please Enter Your Name";
-            this.validation.SetValidationRule(this.outputfilepath, conditionValidationRule1);
             this.outputfilepath.EditValueChanged += new System.EventHandler(this.outputfilepath_EditValueChanged);
             // 
             // removSeleButton
@@ -140,7 +134,6 @@ namespace SVG_Template_Processor
             // 
             this.bW.WorkerReportsProgress = true;
             this.bW.WorkerSupportsCancellation = true;
-            this.bW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bW_DoWork);
             // 
             // labelControl
             // 
@@ -204,12 +197,12 @@ namespace SVG_Template_Processor
 
         }
 
-       
+
 
         #endregion
 
 
-        
+
         private System.Windows.Forms.OpenFileDialog ftbcDialogBox;
         private System.Windows.Forms.FolderBrowserDialog outDialogBox;
         private DevExpress.XtraEditors.SimpleButton ftbConvertButton;
@@ -226,10 +219,10 @@ namespace SVG_Template_Processor
         private DevExpress.XtraEditors.CheckEdit checkEdit1;
 
 
-        
-        
-                    
 
-    
-     }
+
+
+
+
+    }
 }

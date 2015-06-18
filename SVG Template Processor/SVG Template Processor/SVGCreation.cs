@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SVG;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -9,36 +10,36 @@ using System.Text.RegularExpressions;
 
 
 namespace SVG_Template_Processor
-{ 
+{
     public partial class SVGCreation : System.Windows.Forms.Form
     {
-        
+
         private System.Collections.Generic.List<string> pngFilePaths = new System.Collections.Generic.List<string>();
         private System.Collections.Generic.List<string> pngFileNames = new System.Collections.Generic.List<string>();
         private System.Collections.Generic.List<string> sourceFilelocat = new System.Collections.Generic.List<string>();
         private Boolean linked = false;
-    
+
         //initalize 
         public SVGCreation()
         {
             InitializeComponent();
-            
+
         }
 
-         private void ofdButton_Click(object sender, EventArgs e)
-                {
+        private void ofdButton_Click(object sender, EventArgs e)
+        {
 
-                    if (outDialogBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        try
-                        {   
-                            string tempFolder = System.IO.Path.GetFullPath(outDialogBox.SelectedPath);
-                            outputfilepath.Text = System.IO.Path.GetFullPath(outDialogBox.SelectedPath);
-                    
-                        }
-                        catch (Exception ex)
-                        {
-                            System.Windows.Forms.MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+            if (outDialogBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                try
+                {
+                    string tempFolder = System.IO.Path.GetFullPath(outDialogBox.SelectedPath);
+                    outputfilepath.Text = System.IO.Path.GetFullPath(outDialogBox.SelectedPath);
+
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
         }
@@ -48,7 +49,7 @@ namespace SVG_Template_Processor
 
         }
 
-       
+
         private void ftbConvert_Click(object sender, EventArgs e)
         {
             if (ftbcDialogBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -56,14 +57,14 @@ namespace SVG_Template_Processor
                 try
                 {
                     string tempFolder = System.IO.Path.GetTempPath();
-                    
+
                     foreach (string FileName in this.ftbcDialogBox.FileNames)
                     {
                         sourceFiles.Items.Add(System.IO.Path.GetFileNameWithoutExtension(FileName));
                         sourceFilelocat.Add(System.IO.Path.GetDirectoryName(FileName));
                         pngFilePaths.Add(System.IO.Path.GetDirectoryName(FileName));
                         pngFileNames.Add(System.IO.Path.GetFileName(FileName));
-                        
+
 
                     }
                 }
@@ -97,43 +98,49 @@ namespace SVG_Template_Processor
                 pngFileNames.RemoveAt(sourceFiles.SelectedIndices[i]);
                 sourceFilelocat.RemoveAt(sourceFiles.SelectedIndices[i]);
                 sourceFiles.Items.RemoveAt(sourceFiles.SelectedIndices[i]);
-                
+
 
             }
 
         }
 
+        bool Init = false;
         private void svgConvertB_Click(object sender, EventArgs e)
         {
-
-            bW.DoWork += new DoWorkEventHandler(bW_DoWork);
-            bW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bW_RunWorkerCompleted);
+            if (!Init)
+            {
+                Init = true;
+                bW.DoWork += new DoWorkEventHandler(bW_DoWork);
+                bW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bW_RunWorkerCompleted);
+            }
             labelControl.Text = "Working";
-            if(bW.IsBusy != true)
+            if (bW.IsBusy != true)
             {
                 bW.RunWorkerAsync();
             }
-         }
+        }
 
-        
+
 
         private void bW_DoWork(object sender, DoWorkEventArgs e)
         {
-           if (!linked)
-                {   if (pngFileNames.Count > 0)
-                    {   //sourceFiles.Items.
-                        SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), sourceFilelocat.ToArray());
-                        create.buildEmbeddSVG();
-                    }
+            if (!linked)
+            {
+                if (pngFileNames.Count > 0)
+                {   //sourceFiles.Items.
+                    SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), sourceFilelocat.ToArray());
+                    create.buildEmbeddSVG();
                 }
-                else
-                {   if (pngFileNames.Count > 0)
-                    {
-                        SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), sourceFilelocat.ToArray());
-                        create.buildLinkedSVG();
-                    }
+            }
+            else
+            {
+                if (pngFileNames.Count > 0)
+                {
+                    SVGCreationLibrary create = new SVGCreationLibrary(pngFilePaths.ToArray(), outputfilepath.Text, pngFileNames.ToArray(), sourceFilelocat.ToArray());
+                    create.buildLinkedSVG();
                 }
-  
+            }
+
         }
 
         private void bW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -153,7 +160,7 @@ namespace SVG_Template_Processor
                 this.labelControl.Text = "Done!";
             }
             bW.Dispose();
-            
+
         }
 
         private void removeAll_Click(object sender, EventArgs e)
@@ -187,7 +194,7 @@ namespace SVG_Template_Processor
                 svgConvertB.Enabled = true;
             else svgConvertB.Enabled = false;
         }
-          
+
     }
 }
 
